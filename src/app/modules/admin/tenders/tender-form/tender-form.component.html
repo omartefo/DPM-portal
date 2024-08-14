@@ -1,0 +1,169 @@
+<div class="container">
+	<div class="flex justify-between items-center">
+		<h2 class="text-3xl font-semibold tracking-tight leading-8" style="margin: 0;">
+			{{ tenderId ? 'Update Tender' : 'Add Tender'}}
+		</h2>
+		
+		<button mat-icon-button matDialogClose>
+			<mat-icon>close</mat-icon>
+		</button>
+	</div>
+	
+	<mat-divider class="divider"></mat-divider>
+
+	<form [formGroup]="theForm" class="form">
+		<mat-form-field appearance="outline">
+			<mat-label>Tender Number</mat-label>
+			<input matInput placeholder="Tender Number" formControlName="tenderNumber">
+			<mat-error *ngIf="theForm.controls['tenderNumber'].errors">
+				<div *ngIf="theForm.controls['tenderNumber'].hasError('required')">Tender Number is required.</div>
+			</mat-error>
+		</mat-form-field>
+
+		<mat-form-field appearance="outline">
+			<mat-label>Tender Type</mat-label>
+			<input matInput placeholder="Tender Type" formControlName="type">
+			<mat-error *ngIf="theForm.controls['type'].errors">
+				<div *ngIf="theForm.controls['type'].hasError('required')">Tender Type is required.</div>
+			</mat-error>
+		</mat-form-field>
+
+		<mat-form-field appearance="outline" *ngIf="!projectId">
+			<mat-label>Select Project</mat-label>
+			<mat-select formControlName="projectId">
+				<mat-option [value]="project.projectId" *ngFor="let project of projects;">
+					{{ project.name }}
+				</mat-option>
+			</mat-select>
+			<mat-error *ngIf="theForm.controls['projectId'].hasError('required')">
+				Project is required.
+			</mat-error>
+		</mat-form-field>
+
+		<mat-form-field appearance="outline">
+			<mat-label>Opening Date</mat-label>
+			<input [min]="currentDate" matInput placeholder="Opening Date" [matDatepicker]="openingDate" formControlName="openingDate">
+			<mat-datepicker-toggle matSuffix [for]="openingDate"></mat-datepicker-toggle>
+			<mat-datepicker #openingDate></mat-datepicker>
+
+			<mat-error *ngIf="theForm.controls['openingDate'].errors">
+				<div *ngIf="theForm.controls['openingDate'].hasError('required')">Opening date is required.</div>
+			</mat-error>
+		</mat-form-field>
+
+		<div class="flex">
+			<mat-form-field appearance="outline" class="mr-3 time-input">
+				<input matInput
+				   #inputModel="ngModel"
+				   [ngModelOptions]="{standalone: true}"
+				   [(ngModel)]="openingTime"
+				   placeholder="12:00"/>
+				<mat-error *ngIf="inputModel.hasError('pattern')">Expected format: H:mm AM|PM</mat-error>
+			</mat-form-field>
+	
+			<button mat-raised-button
+				class="timer-btn ngx-mtp-margin-top ngx-mtp-margin-bottom ngx-mtp-d-inline-block"
+				(click)="openingTimePicker.open()"
+				color="primary">
+				Opening Time
+			</button>
+		</div>
+
+		<ngx-mat-timepicker
+			[defaultTime]="openingTime"
+			(timeSet)="onSetOpeningTime($event)"
+			#openingTimePicker>
+		</ngx-mat-timepicker>
+
+		<mat-form-field appearance="outline">
+			<mat-label>Closing Date</mat-label>
+			<input [disabled]="!theForm.controls.openingDate.value" [min]="theForm.controls.openingDate.value" matInput placeholder="Closing Date" [matDatepicker]="closingDate" formControlName="closingDate">
+			<mat-datepicker-toggle matSuffix [for]="closingDate"></mat-datepicker-toggle>
+			<mat-datepicker #closingDate></mat-datepicker>
+
+			<mat-error *ngIf="theForm.controls['closingDate'].errors">
+				<div *ngIf="theForm.controls['closingDate'].hasError('required')">Closing date is required.</div>
+			</mat-error>
+		</mat-form-field>
+
+		<div class="flex">
+			<mat-form-field appearance="outline" class="mr-3 time-input">
+				<input matInput
+				   #inputModel="ngModel"
+				   [ngModelOptions]="{standalone: true}"
+				   [(ngModel)]="closingTime"
+				   placeholder="12:00"/>
+				<mat-error *ngIf="inputModel.hasError('pattern')">Expected format: H:mm AM|PM</mat-error>
+			</mat-form-field>
+	
+			<button mat-raised-button
+				class="timer-btn ngx-mtp-margin-top ngx-mtp-margin-bottom ngx-mtp-d-inline-block"
+				(click)="closingTimePicker.open()"
+				color="primary">
+				Closing Time
+			</button>
+		</div>
+
+		<ngx-mat-timepicker
+			[defaultTime]="closingTime"
+			(timeSet)="onSetClosingTime($event)"
+			#closingTimePicker>
+		</ngx-mat-timepicker>
+
+		<mat-form-field appearance="outline">
+			<mat-label>Minimum Price</mat-label>
+			<input type="number" matInput placeholder="Minimum Price" formControlName="minimumPrice">
+			<mat-error *ngIf="theForm.controls['minimumPrice'].errors">
+				<div *ngIf="theForm.controls['minimumPrice'].hasError('required')">Minimum Price is required.</div>
+			</mat-error>
+		</mat-form-field>
+
+		<mat-form-field appearance="outline">
+			<mat-label>Maximum Price</mat-label>
+			<input type="number" matInput placeholder="Maximum Price" formControlName="maximumPrice">
+			<mat-error *ngIf="theForm.controls['maximumPrice'].errors">
+				<div *ngIf="theForm.controls['maximumPrice'].hasError('required')">Maximum Price is required.</div>
+			</mat-error>
+		</mat-form-field>
+	
+		<mat-form-field appearance="outline">
+			<mat-label>Location</mat-label>
+			<mat-select formControlName="location">
+				<mat-option [value]="loc" *ngFor="let loc of projectLocations;">
+					{{ loc }}
+				</mat-option>
+			</mat-select>
+			<mat-error *ngIf="theForm.controls['location'].hasError('required')">
+				Location is required.
+			</mat-error>
+		</mat-form-field>
+
+		<mat-form-field appearance="outline">
+			<mat-label>Description</mat-label>
+			<textarea matInput placeholder="Description" formControlName="description"></textarea>
+			<mat-error *ngIf="theForm.controls['description'].errors">
+				<div *ngIf="theForm.controls['description'].hasError('required')">Description is required.</div>
+			</mat-error>
+		</mat-form-field>
+
+		<div class="flex flex-col">
+			<label>Upload Tender Files</label>
+			<input class="mb-3" type="file" [accept]="allowedFileTypes" [multiple]="true" #uploadFilesField (change)="onFileChange()">
+
+			<mat-chip-list *ngIf="files.length > 1">
+				<mat-chip *ngFor="let file of files">
+					{{file.name}}
+				</mat-chip>
+			</mat-chip-list>
+		</div>
+	</form>
+
+	<mat-divider class="divider"></mat-divider>
+
+	<div class="flex justify-end">
+		<button mat-raised-button color="primary" 
+			[disabled]="theForm.invalid || !theForm.dirty || disableSaveBtn" 
+			(click)="onSave()">{{ tenderId ? 'Update' : 'Save' }}
+		</button>
+	</div>
+</div>

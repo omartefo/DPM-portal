@@ -1,0 +1,72 @@
+<div class="w-full p-8">
+	<mat-card class="table-card">
+		<div class="container">
+			<div class="table-main-header">
+				<div class="title-section flex items-center">
+					<h2 class="text-3xl font-semibold tracking-tight leading-8 mr-3"> Bidders Pricing </h2>
+				</div>
+	
+				<div class="flex flex-1 justify-end">
+					<div class="row-actions mr-3" *ngIf="selectedRow">
+						<button mat-button color="primary" class="action"
+							(click)="onAwardTender()">
+							Award Tender
+						</button>
+					</div>
+			
+					<button mat-stroked-button (click)="getAllBids()">
+						<mat-icon>refresh</mat-icon>
+					</button>
+				</div>
+			</div>
+	
+			<div class="table">
+				<div>
+					<table mat-table [dataSource]="dataSource">
+						<ng-container matColumnDef="company">
+							<th mat-header-cell *matHeaderCellDef> Company </th>
+							<td mat-cell *matCellDef="let element"> {{element.user?.company?.name }} </td>
+						</ng-container>
+	
+						<ng-container matColumnDef="duration">
+							<th mat-header-cell *matHeaderCellDef> Duration </th>
+							<td mat-cell *matCellDef="let element"> {{element.durationInNumbers }} </td>
+						</ng-container>
+	
+						<ng-container matColumnDef="price">
+							<th mat-header-cell *matHeaderCellDef> Price </th>
+							<td mat-cell *matCellDef="let element"> {{element.priceInNumbers }} </td>
+						</ng-container>
+	
+						<ng-container matColumnDef="status">
+							<th mat-header-cell *matHeaderCellDef> Status </th>
+							<td mat-cell *matCellDef="let element"> {{element.status }} </td>
+						</ng-container>
+	
+						<ng-container matColumnDef="loading">
+							<th mat-header-cell *matHeaderCellDef colspan="100%" style="border-bottom-width: 0; padding: 0;" >
+								<mat-progress-bar *ngIf="loading" color="warn" mode="query"></mat-progress-bar>
+							</th>
+						</ng-container>
+	
+						<ng-container matColumnDef="error">
+							<td class="error-cell" mat-cell *matCellDef="let row" colspan="100%">
+								<h3 class="error-title">{{row.title}}</h3>
+								<p class="error-msg" *ngIf="row.message">{{row.message}}</p>
+							</td>
+						</ng-container>
+						
+						<tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true;"></tr>
+						<tr mat-header-row *matHeaderRowDef="['loading']; sticky: true;" style="height: 3px !important;"></tr>
+						<tr mat-row *matRowDef="let row; columns: ['error']; when: showError"></tr>
+					
+						<tr mat-row *matRowDef="let row; columns: displayedColumns;" 
+							[class.selected]="row === selectedRow"
+							style="cursor: pointer;" (click)="onRowClick(row)">
+						</tr>
+					</table>
+				</div>
+			</div>
+		</div>
+	</mat-card>
+</div>

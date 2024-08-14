@@ -1,0 +1,28 @@
+.container {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+
+	.divider {
+		width: 100%;
+		margin: .8rem 0;
+	}
+
+	.form {
+		display: flex;
+		flex-direction: column;
+		height: calc(100% - 9rem);
+		overflow-y: auto;
+	}
+
+	.time-input {
+		width: 80%;
+	}
+
+	.timer-btn {
+		font-size: .8rem;
+		padding: 12px !important;
+		border-radius: 14px !important;
+		margin-top: 10px;
+	}
+}

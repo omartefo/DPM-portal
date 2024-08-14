@@ -1,0 +1,35 @@
+<div class="container">
+	<div class="flex justify-between items-center">
+		<h2 class="text-3xl font-semibold tracking-tight leading-8" style="margin: 0;">
+			Company Info
+		</h2>
+		
+		<button mat-icon-button matDialogClose>
+			<mat-icon>close</mat-icon>
+		</button>
+	</div>
+	
+	<mat-divider class="divider"></mat-divider>
+
+	<div class="content mt-5">
+		<div class="row">
+			<div class="label">Company Name:</div>
+			<div class="value">{{ company.name }}</div>
+		</div>
+
+		<div class="row">
+			<div class="label">Commercial Registration Number:</div>
+			<div class="value">{{ company.commercialRegNumber }}</div>
+		</div>
+
+		<div class="row">
+			<div class="label">Address:</div>
+			<div class="value">{{ company.address }}</div>
+		</div>
+
+		<div class="row">
+			<div class="label">Total Employees:</div>
+			<div class="value">{{ company.totalEmployees }}</div>
+		</div>
+	</div>
+</div>
