@@ -7,6 +7,7 @@ import { ApiService } from 'app/api.service';
 import { Helpers } from 'app/shared/helpers';
 import Validation from 'app/shared/validators';
 import { GenericApiResponse } from './../../../../models';
+import { UserTypes } from 'app/shared/constants';
 
 
 @Component({
@@ -16,7 +17,7 @@ import { GenericApiResponse } from './../../../../models';
 })
 export class UserAddFormComponent implements OnInit {
 	clientTypes: string[] = ['Client', 'Supplier', 'Contractor', 'Consultant'];
-	id: string;
+	userId: number;
 	theForm: FormGroup;
 	disableSaveBtn = false;
 
@@ -31,12 +32,12 @@ export class UserAddFormComponent implements OnInit {
 			email: [null, [Validators.required, Validators.email]],
 			password: [null, [Validators.required]],
 			confirmPassword: [null, [Validators.required]],
-			type: ['Client', [Validators.required]]
+			type: [UserTypes.client, [Validators.required]]
 		}, { validators: [Validation.match('password', 'confirmPassword')]});
 	}
 
 	ngOnInit(): void {
-		if (this.id) {
+		if (this.userId) {
 			this.theForm.removeControl('password');
 			this.theForm.removeControl('confirmPassword');
 			this.getUser();
@@ -44,13 +45,17 @@ export class UserAddFormComponent implements OnInit {
 	}
 
 	getUser(): void {
-		this.apiService.get(`users/${this.id}`).subscribe({
+		this.apiService.get(`users/${this.userId}`).subscribe({
 			next: (resp: GenericApiResponse) => {
-				if (resp.data['user'].type !== 'Client') {
+				let usersData = { ...resp.data['user'] };
+
+				if (resp.data['user'].type !== UserTypes.client) {
 					this.onUserTypeChange({ value: resp.data['user'].type, source: null } );
+					usersData = { ...resp.data['user'], ...resp.data['user']['company'] };
+					this.theForm.get('companyName').patchValue(resp.data['user']['company'].name);
 				}
 
-				this.theForm.patchValue(resp.data['user']);
+				this.theForm.patchValue(usersData);
 			},
 			error: (error: any) => this.toastr.error(error)
 		});
@@ -60,7 +65,7 @@ export class UserAddFormComponent implements OnInit {
 		return Helpers.numericOnly(ev);
 	}
 
-	onUserTypeChange(ev: MatSelectChange ): void {
+	onUserTypeChange(ev: MatSelectChange): void {
 		if (ev.value !== 'Client') {
 			this.theForm.addControl('companyName', new FormControl('', Validators.required));
 			this.theForm.addControl('commercialRegNumber', new FormControl('', Validators.required));
@@ -83,8 +88,8 @@ export class UserAddFormComponent implements OnInit {
 		payload.confirmPassword = undefined;
 		this.disableSaveBtn = true;
 
-		if (this.id) {
-			this.apiService.patch(`users/${this.id}`, payload).subscribe({
+		if (this.userId) {
+			this.apiService.patch(`users/${this.userId}`, payload).subscribe({
 				next: () => {
 					this.disableSaveBtn = false;
 					this.dialogRef.close(true);

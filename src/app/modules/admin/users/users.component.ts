@@ -84,7 +84,7 @@ export class UsersComponent {
 		});
 
 		if (row) {
-			dialog.componentInstance.id = row.userId;
+			dialog.componentInstance.userId = row.userId;
 		}
 
 		dialog.afterClosed().subscribe((resp: boolean) => {
