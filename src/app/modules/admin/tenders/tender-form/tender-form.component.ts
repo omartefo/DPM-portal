@@ -97,6 +97,12 @@ export class AddTenderFormComponent implements OnInit
 	}
 
 	onSetClosingTime(time: string): void {
+		if (time <= this.openingTime) {
+			this.toastr.error('Closing time must be greater than opening time', 'Time Validation Error');
+			this.closingTime = null;
+			return;
+		}
+
 		this.theForm.get('closingDate').markAsDirty();
 		this.closingTime = time;
 	}
@@ -137,6 +143,11 @@ export class AddTenderFormComponent implements OnInit
 	}
 
 	onSave(): void {
+		if (this.closingTime <= this.openingTime) {
+			this.toastr.error('Closing time must be greater than opening time', 'Time Validation Error');
+			return;
+		}
+
 		let payload = this.theForm.value;
 
 		const openingDateTime = moment(this.theForm.get('openingDate').value);

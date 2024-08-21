@@ -77,7 +77,7 @@
 
 		<mat-form-field appearance="outline">
 			<mat-label>Closing Date</mat-label>
-			<input [disabled]="!theForm.controls.openingDate.value" [min]="theForm.controls.openingDate.value" matInput placeholder="Closing Date" [matDatepicker]="closingDate" formControlName="closingDate">
+			<input [min]="theForm.controls.openingDate.value" matInput placeholder="Closing Date" [matDatepicker]="closingDate" formControlName="closingDate">
 			<mat-datepicker-toggle matSuffix [for]="closingDate"></mat-datepicker-toggle>
 			<mat-datepicker #closingDate></mat-datepicker>
 
