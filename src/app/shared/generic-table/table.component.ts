@@ -4,6 +4,9 @@ import { PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
+import { FileSaverService } from 'ngx-filesaver';
+import JSZip from 'jszip';
+import { ToastrService } from 'ngx-toastr';
 
 // Services
 import { ApiService } from 'app/api.service';
@@ -14,8 +17,6 @@ import { UserService } from 'app/core/user/user.service';
 import { TableAction, TableConfig, TableRowAction, TableSignal } from './models';
 import { GenericApiResponse, User } from 'app/models';
 import { WhereData } from './models';
-import { FileSaverService } from 'ngx-filesaver';
-import JSZip from 'jszip';
 
 
 @Component({
@@ -50,6 +51,7 @@ export class TableComponent implements OnInit {
 				private userService: UserService,
 				private confirmationService: FuseConfirmationService,
 				private fileSaverService: FileSaverService,
+				private toastr: ToastrService,
 				private cdr: ChangeDetectorRef)
 	{
 		this.dataSource = new MatTableDataSource();
@@ -241,8 +243,10 @@ export class TableComponent implements OnInit {
 
 			dialog.afterClosed().subscribe((action: 'confirmed' | 'cancelled') => {
 				if (action === 'confirmed') {
-					this.apiService.delete(`${this.config.slug}/${this.selectedRow[this.config.primaryKey]}`).subscribe(() => {
-						this.loadData();
+					const slug = `${this.config.slug}/${this.selectedRow[this.config.primaryKey]}`;
+					this.apiService.delete(slug).subscribe({
+						next: () => this.loadData(),
+						error: error => this.toastr.error(error)
 					});
 
 					this.selectedRow = null;
