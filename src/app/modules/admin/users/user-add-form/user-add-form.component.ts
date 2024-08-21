@@ -28,7 +28,7 @@ export class UserAddFormComponent implements OnInit {
 	{
 		this.theForm = fb.group({
 			name: [null, [Validators.required]],
-			mobileNumber: [null, [Validators.required, Validators.minLength(8), Validators.maxLength(8)]],
+			mobileNumber: [null, [Validators.required, Validators.minLength(10), Validators.maxLength(10)]],
 			email: [null, [Validators.required, Validators.email]],
 			password: [null, [Validators.required]],
 			confirmPassword: [null, [Validators.required]],
