@@ -9,6 +9,7 @@ import { Project } from '../../../../models';
 import { NgxMatTimepickerModule } from 'ngx-mat-timepicker';
 import moment from 'moment';
 import { ToastrService } from 'ngx-toastr';
+import Validation from 'app/shared/validators';
 
 
 @Component({
@@ -48,13 +49,13 @@ export class AddTenderFormComponent implements OnInit
 			type: ['', Validators.required],
 			openingDate: [this.currentDate, Validators.required],
 			closingDate: [this.currentDate, Validators.required],
-			minimumPrice: [, Validators.required],
+			minimumPrice: [, [Validators.required, Validators.min(1)]],
 			maximumPrice: [, Validators.required],
 			location: ['', Validators.required],
 			description: ['', Validators.required],
 			projectId: ['', Validators.required],
 			documents: ['']
-		});
+		},  { validator: Validation.priceRangeValidator('minimumPrice', 'maximumPrice') });
 	}
 
 	ngOnInit(): void {

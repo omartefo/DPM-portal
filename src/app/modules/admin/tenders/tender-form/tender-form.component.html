@@ -112,17 +112,19 @@
 
 		<mat-form-field appearance="outline">
 			<mat-label>Minimum Price</mat-label>
-			<input type="number" matInput placeholder="Minimum Price" formControlName="minimumPrice">
+			<input type="number" matInput placeholder="Minimum Price" formControlName="minimumPrice" min="1" [required]="true">
 			<mat-error *ngIf="theForm.controls['minimumPrice'].errors">
 				<div *ngIf="theForm.controls['minimumPrice'].hasError('required')">Minimum Price is required.</div>
+				<div *ngIf="theForm.controls['minimumPrice'].hasError('min')">Minimum price should be greater than zero.</div>
 			</mat-error>
 		</mat-form-field>
 
 		<mat-form-field appearance="outline">
 			<mat-label>Maximum Price</mat-label>
-			<input type="number" matInput placeholder="Maximum Price" formControlName="maximumPrice">
+			<input type="number" matInput placeholder="Maximum Price" formControlName="maximumPrice" [required]="true">
 			<mat-error *ngIf="theForm.controls['maximumPrice'].errors">
 				<div *ngIf="theForm.controls['maximumPrice'].hasError('required')">Maximum Price is required.</div>
+				<div *ngIf="theForm.controls['maximumPrice'].hasError('priceRangeInvalid')">Maximum price should be greater than minimum price</div>
 			</mat-error>
 		</mat-form-field>
 	

@@ -1,4 +1,4 @@
-import { AbstractControl, ValidatorFn } from '@angular/forms';
+import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 
 export default class Validation {
 	static match(controlName: string, checkControlName: string): ValidatorFn {
@@ -19,4 +19,27 @@ export default class Validation {
 			};
 		};
 	}
+
+	static priceRangeValidator(minControlName: string, maxControlName: string): ValidatorFn {
+		return (formGroup: AbstractControl): ValidationErrors | null => {
+		  const minControl = formGroup.get(minControlName);
+		  const maxControl = formGroup.get(maxControlName);
+
+		  if (!minControl || !maxControl) {
+			return null; // Form controls not found
+		  }
+
+		  const minValue = minControl.value;
+		  const maxValue = maxControl.value;
+
+		  if (minValue && maxValue && maxValue <= minValue) {
+			maxControl.setErrors({ priceRangeInvalid: true });// Return error if max is less than or equal to min
+		  }
+		  else {
+			maxControl.setErrors(null);
+		  }
+
+		  return null; // Return null if no error
+		};
+	  }
 }
