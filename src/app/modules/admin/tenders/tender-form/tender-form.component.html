@@ -42,7 +42,7 @@
 
 		<mat-form-field appearance="outline">
 			<mat-label>Opening Date</mat-label>
-			<input [min]="currentDate" matInput placeholder="Opening Date" [matDatepicker]="openingDate" formControlName="openingDate">
+			<input (dateChange)="onOpeningDateChange($event)" [min]="currentDate" matInput placeholder="Opening Date" [matDatepicker]="openingDate" formControlName="openingDate">
 			<mat-datepicker-toggle matSuffix [for]="openingDate"></mat-datepicker-toggle>
 			<mat-datepicker #openingDate></mat-datepicker>
 

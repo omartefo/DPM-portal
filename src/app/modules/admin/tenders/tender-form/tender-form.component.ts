@@ -38,7 +38,6 @@ export class AddTenderFormComponent implements OnInit
 	closingTime = moment(new Date()).format('hh:mm A');
 	allowedFileTypes = ['.jpg', '.jpeg', '.png', '.pdf', '.docx'];
 
-
 	constructor(private apiService: ApiService,
 				private fb: FormBuilder,
 				private toastr: ToastrService,
@@ -91,18 +90,16 @@ export class AddTenderFormComponent implements OnInit
 		});
 	}
 
+	onOpeningDateChange(ev: any): void {
+		this.theForm.get('closingDate').setValue(ev.value);
+	}
+
 	onSetOpeningTime(time: string): void {
 		this.theForm.get('openingDate').markAsDirty();
 		this.openingTime = time;
 	}
 
 	onSetClosingTime(time: string): void {
-		if (time <= this.openingTime) {
-			this.toastr.error('Closing time must be greater than opening time', 'Time Validation Error');
-			this.closingTime = null;
-			return;
-		}
-
 		this.theForm.get('closingDate').markAsDirty();
 		this.closingTime = time;
 	}
@@ -143,18 +140,24 @@ export class AddTenderFormComponent implements OnInit
 	}
 
 	onSave(): void {
-		if (this.closingTime <= this.openingTime) {
+		let payload = this.theForm.value;
+
+		const openingDateTime = moment(payload['openingDate']).seconds(0);
+		payload.openingDate = this.setDateTime(openingDateTime, this.openingTime);
+
+		const closingDateTime = moment(payload['closingDate']).seconds(0);
+		payload.closingDate = this.setDateTime(closingDateTime, this.closingTime);
+
+		const currentDateTime = moment().seconds(0);
+
+		if (openingDateTime.isBefore(currentDateTime)) {
+			this.toastr.error('Opening time must be greater then current time', 'Time Validation Error');
+			return;
+		}
+		if (openingDateTime >= closingDateTime) {
 			this.toastr.error('Closing time must be greater than opening time', 'Time Validation Error');
 			return;
 		}
-
-		let payload = this.theForm.value;
-
-		const openingDateTime = moment(this.theForm.get('openingDate').value);
-		payload.openingDate = this.setDateTime(openingDateTime, this.openingTime);
-
-		const closingDateTime = moment(this.theForm.get('closingDate').value);
-		payload.closingDate = this.setDateTime(closingDateTime, this.closingTime);
 
 		this.disableSaveBtn = true;
 

@@ -32,7 +32,7 @@ export default class Validation {
 		  const minValue = minControl.value;
 		  const maxValue = maxControl.value;
 
-		  if (minValue && maxValue && maxValue <= minValue) {
+		  if (minValue != null && maxValue != null && maxValue <= minValue) {
 			maxControl.setErrors({ priceRangeInvalid: true });// Return error if max is less than or equal to min
 		  }
 		  else {
