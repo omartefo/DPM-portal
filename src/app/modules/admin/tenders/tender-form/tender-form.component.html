@@ -149,14 +149,33 @@
 		</mat-form-field>
 
 		<div class="flex flex-col">
-			<label>Upload Tender Files</label>
-			<input class="mb-3" type="file" [accept]="allowedFileTypes" [multiple]="true" #uploadFilesField (change)="onFileChange()">
+			<label class="font-semibold mb-2">Upload Tender Files</label>
+			
+			<div class="flex items-center justify-between">
+				<tender-document class="tender-slot-container"
+					[title]="'Document 1'" 
+					[key]="'document1'" 
+					[documentValue]="theForm.controls.document1.value"
+					
+					(signal)="onTenderDocumentSignalReceive($event)">
+				</tender-document>
 
-			<mat-chip-list *ngIf="files.length > 1">
-				<mat-chip *ngFor="let file of files">
-					{{file.name}}
-				</mat-chip>
-			</mat-chip-list>
+				<tender-document class="tender-slot-container"
+					[title]="'Document 2'" 
+					[key]="'document2'" 
+					[documentValue]="theForm.controls.document2.value"
+					
+					(signal)="onTenderDocumentSignalReceive($event)">
+				</tender-document>
+
+				<tender-document class="tender-slot-container"
+					[title]="'Document 3'" 
+					[key]="'document3'" 
+					[documentValue]="theForm.controls.document3.value"
+					
+					(signal)="onTenderDocumentSignalReceive($event)">
+				</tender-document>
+			</div>
 		</div>
 	</form>
 

@@ -1,15 +1,16 @@
 import { MaterialModule } from 'app/modules/material/material.module';
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { ApiService } from 'app/api.service';
 import { CommonModule } from '@angular/common';
-import { GenericApiResponse } from 'app/models';
+import { GenericApiResponse, TenderDocumentSignal } from 'app/models';
 import { Project } from '../../../../models';
 import { NgxMatTimepickerModule } from 'ngx-mat-timepicker';
 import moment from 'moment';
 import { ToastrService } from 'ngx-toastr';
 import Validation from 'app/shared/validators';
+import { TenderDocumentComponent } from './tender-document/tender-document.component';
 
 
 @Component({
@@ -17,13 +18,10 @@ import Validation from 'app/shared/validators';
   templateUrl: './tender-form.component.html',
   styleUrls: ['./tender-form.component.scss'],
   standalone: true,
-  imports: [CommonModule, MaterialModule, FormsModule, ReactiveFormsModule, NgxMatTimepickerModule]
+  imports: [CommonModule, MaterialModule, FormsModule, ReactiveFormsModule, NgxMatTimepickerModule, TenderDocumentComponent]
 })
 export class AddTenderFormComponent implements OnInit
 {
-	@ViewChild('uploadFilesField') uploadFilesField: ElementRef<HTMLInputElement>;
-	files: File[] = [];
-
 	projectLocations: string[] = ['Doha', 'Al Rayyan', 'Umm Salal',
 		'Al Khor & Al Thakira', 'Al Wakrah', 'Al Daayen', 'Al Shamal, and Al Shahaniya'];
 
@@ -32,11 +30,12 @@ export class AddTenderFormComponent implements OnInit
 	theForm: FormGroup;
 	disableSaveBtn = false;
 	projects: Project[] = [];
-
 	currentDate = new Date();
 	openingTime = moment(new Date()).format('hh:mm A');
 	closingTime = moment(new Date()).format('hh:mm A');
-	allowedFileTypes = ['.jpg', '.jpeg', '.png', '.pdf', '.docx'];
+	document1: File;
+	document2: File;
+	document3: File;
 
 	constructor(private apiService: ApiService,
 				private fb: FormBuilder,
@@ -53,7 +52,9 @@ export class AddTenderFormComponent implements OnInit
 			location: ['', Validators.required],
 			description: ['', Validators.required],
 			projectId: ['', Validators.required],
-			documents: ['']
+			document1: [''],
+			document2: [''],
+			document3: ['']
 		},  { validator: Validation.priceRangeValidator('minimumPrice', 'maximumPrice') });
 	}
 
@@ -121,15 +122,46 @@ export class AddTenderFormComponent implements OnInit
 		return date;
 	}
 
+	onTenderDocumentSignalReceive(ev: TenderDocumentSignal): void {
+		const { type, key, value } = ev;
+
+		switch(type) {
+			case 'ResetDocument':
+				this.theForm.get(key).setValue('');
+				this.theForm.markAsDirty();
+				break;
+
+			case 'UploadDocument':
+				if (key === 'document1') {
+					this.document1 = value;
+				}
+				else if (key === 'document2') {
+					this.document2 = value;
+				}
+				else if (key === 'document3') {
+					this.document3 = value;
+				}
+				break;
+		}
+	}
+
 	makePayload(payload: any): FormData {
 		const formData: any = new FormData();
 
 		// eslint-disable-next-line guard-for-in
 		for (const key in payload) {
-			if (key === 'documents' && this.files.length > 0) {
-				for (const file of this.files) {
-					formData.append(key, file);
-				}
+			if (key === 'document1' && this.document1) {
+				formData.append(key, this.document1);
+				continue;
+			}
+
+			if (key === 'document2' && this.document2 instanceof File) {
+				formData.append(key, this.document2);
+				continue;
+			}
+
+			if (key === 'document3' && this.document3 instanceof File) {
+				formData.append(key, this.document3);
 				continue;
 			}
 
@@ -161,9 +193,7 @@ export class AddTenderFormComponent implements OnInit
 
 		this.disableSaveBtn = true;
 
-		if (this.files.length > 0) {
-			payload = this.makePayload(payload);
-		}
+		payload = this.makePayload(payload);
 
 		if (this.tenderId) {
 			this.apiService.patch(`tenders/${this.tenderId}`, payload).subscribe({
@@ -188,17 +218,6 @@ export class AddTenderFormComponent implements OnInit
 					this.toastr.error(error);
 				}
 			});
-		}
-	}
-
-	onFileChange(): void {
-		this.files = [];
-		const allFiles = this.uploadFilesField.nativeElement.files;
-
-		// eslint-disable-next-line @typescript-eslint/prefer-for-of
-		for (let i=0; i<allFiles.length; i++) {
-			const file = allFiles.item(i);
-			this.files.push(file);
 		}
 	}
 }

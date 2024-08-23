@@ -1,0 +1,14 @@
+<div class="document-slot" [class.mr-10]="key === 'document3'">
+	<div class="mb-2">{{ title }}</div>
+	<div *ngIf="documentValue; else uploadDoc" class="relative">
+		<img class="tender-doc" [src]="documentValue" alt="Tender document">
+
+		<button mat-icon-button color="warn" class="btn-remove-tender-doc" (click)="onRemoveTenderDocument()">
+			<mat-icon>close</mat-icon>
+		</button>
+	</div>
+
+	<ng-template #uploadDoc>
+		<input class="mb-3 file-upload-input" type="file" [accept]="allowedFileTypes" #uploadDocField (change)="onFileChange()">
+	</ng-template>
+</div>

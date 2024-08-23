@@ -53,3 +53,9 @@ export interface Tender {
 	// User to which this tender is awarded
 	awardedTo: User;
 }
+
+export interface TenderDocumentSignal {
+	type: 'ResetDocument' | 'UploadDocument';
+	value: File;
+	key: 'document1' | 'document2' | 'document3';
+}
