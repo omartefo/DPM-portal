@@ -180,16 +180,16 @@ export class AddTenderFormComponent implements OnInit
 		const closingDateTime = moment(payload['closingDate']).seconds(0);
 		payload.closingDate = this.setDateTime(closingDateTime, this.closingTime);
 
-		const currentDateTime = moment().seconds(0);
+		// const currentDateTime = moment().seconds(0);
 
-		if (openingDateTime.isBefore(currentDateTime)) {
-			this.toastr.error('Opening time must be greater then current time', 'Time Validation Error');
-			return;
-		}
-		if (openingDateTime >= closingDateTime) {
-			this.toastr.error('Closing time must be greater than opening time', 'Time Validation Error');
-			return;
-		}
+		// if (openingDateTime.isBefore(currentDateTime)) {
+		// 	this.toastr.error('Opening time must be greater then current time', 'Time Validation Error');
+		// 	return;
+		// }
+		// if (openingDateTime >= closingDateTime) {
+		// 	this.toastr.error('Closing time must be greater than opening time', 'Time Validation Error');
+		// 	return;
+		// }
 
 		this.disableSaveBtn = true;
 
