@@ -3,7 +3,7 @@ import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { ApiService } from 'app/api.service';
-import { TableAction, TableConfig, TableSignal } from 'app/shared/generic-table/models';
+import { TableAction, TableConfig, TableSignal } from 'app/shared/components/generic-table/models';
 import { Subject } from 'rxjs';
 import { AdminAddFormComponent } from './../admin-form/admin-form.component';
 

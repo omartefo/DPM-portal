@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { TableConfig, TableAction, TableSignal } from 'app/shared/generic-table/models';
+import { TableConfig, TableAction, TableSignal } from 'app/shared/components/generic-table/models';
 import { Subject } from 'rxjs';
 
 

@@ -123,12 +123,12 @@ export class AddTenderFormComponent implements OnInit
 	}
 
 	onTenderDocumentSignalReceive(ev: TenderDocumentSignal): void {
+		this.theForm.markAsDirty();
 		const { type, key, value } = ev;
 
 		switch(type) {
 			case 'ResetDocument':
 				this.theForm.get(key).setValue('');
-				this.theForm.markAsDirty();
 				break;
 
 			case 'UploadDocument':

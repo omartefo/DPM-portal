@@ -4,10 +4,10 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { Route, RouterModule } from '@angular/router';
 
 import { MaterialModule } from 'app/modules/material/material.module';
-import { GenericTableModule } from 'app/shared/generic-table/module';
 
 import { AdminUsersComponent } from './main/main.component';
 import { AdminAddFormComponent } from './admin-form/admin-form.component';
+import { GenericTableModule } from 'app/shared/components/generic-table/module';
 
 const routes: Route[] = [
     {

@@ -1,7 +1,7 @@
 import { MatDialog } from '@angular/material/dialog';
 import { Component } from '@angular/core';
 import { Subject } from 'rxjs';
-import { TableConfig, TableAction, TableSignal } from 'app/shared/generic-table/models';
+import { TableConfig, TableAction, TableSignal } from 'app/shared/components/generic-table/models';
 import { UploadDocumentComponent } from '../upload-doc/upload-doc.component';
 
 

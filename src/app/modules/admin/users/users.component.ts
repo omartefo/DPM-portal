@@ -2,7 +2,7 @@ import { ToastrService } from 'ngx-toastr';
 import { MatDialog } from '@angular/material/dialog';
 import { Component } from '@angular/core';
 import { Subject } from 'rxjs';
-import { TableConfig, TableAction, TableSignal } from 'app/shared/generic-table/models';
+import { TableConfig, TableAction, TableSignal } from 'app/shared/components/generic-table/models';
 import { UserAddFormComponent } from './user-add-form/user-add-form.component';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { ApiService } from 'app/api.service';

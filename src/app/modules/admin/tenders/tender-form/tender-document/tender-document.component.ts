@@ -3,6 +3,7 @@ import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { TenderDocumentSignal } from 'app/models';
+import { FilePreviewPipe } from 'app/shared/pipes/file-preview.pipe';
 
 
 @Component({
@@ -10,7 +11,7 @@ import { TenderDocumentSignal } from 'app/models';
   templateUrl: './tender-document.component.html',
   styleUrls: ['./tender-document.component.scss'],
   standalone: true,
-  imports: [CommonModule, MatIconModule, MatButtonModule]
+  imports: [CommonModule, MatIconModule, MatButtonModule, FilePreviewPipe],
 })
 export class TenderDocumentComponent
 {

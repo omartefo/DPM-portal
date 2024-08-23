@@ -3,9 +3,9 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Route, RouterModule } from '@angular/router';
 import { MaterialModule } from 'app/modules/material/material.module';
-import { GenericTableModule } from 'app/shared/generic-table/module';
 import { UsersComponent } from './users.component';
 import { UserAddFormComponent } from './user-add-form/user-add-form.component';
+import { GenericTableModule } from 'app/shared/components/generic-table/module';
 
 const routes: Route[] = [
     {

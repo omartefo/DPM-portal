@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Route, RouterModule } from '@angular/router';
-import { GenericTableModule } from 'app/shared/generic-table/module';
 import { BidsComponent } from './bids/bids.component';
+import { GenericTableModule } from 'app/shared/components/generic-table/module';
 
 const routes: Route[] = [
     {
@@ -17,9 +17,9 @@ const routes: Route[] = [
   ],
   imports: [
     CommonModule,
-	RouterModule.forChild(routes),
+    RouterModule.forChild(routes),
 
-	GenericTableModule,
+    GenericTableModule,
   ]
 })
 export class BidsModule { }

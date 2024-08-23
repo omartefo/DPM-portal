@@ -2,10 +2,10 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Route, RouterModule } from '@angular/router';
-import { GenericTableModule } from 'app/shared/generic-table/module';
 import { MaterialModule } from 'app/modules/material/material.module';
 import { DownloadCenterComponent } from './downloads/downloads.component';
 import { UploadDocumentComponent } from './upload-doc/upload-doc.component';
+import { GenericTableModule } from 'app/shared/components/generic-table/module';
 
 const routes: Route[] = [
     {
@@ -21,11 +21,11 @@ const routes: Route[] = [
   ],
   imports: [
     CommonModule,
-	ReactiveFormsModule,
-	RouterModule.forChild(routes),
+    ReactiveFormsModule,
+    RouterModule.forChild(routes),
 
-	GenericTableModule,
-	MaterialModule
+    GenericTableModule,
+    MaterialModule
   ]
 })
 export class DownloadCenterModule { }

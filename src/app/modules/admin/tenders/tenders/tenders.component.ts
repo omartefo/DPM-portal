@@ -4,13 +4,12 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { Tender, User } from 'app/models';
-import { TableConfig, TableAction, TableSignal } from 'app/shared/generic-table/models';
+import { TableConfig, TableAction, TableSignal } from 'app/shared/components/generic-table/models';
 import { AddTenderFormComponent } from 'app/modules/admin/tenders/tender-form/tender-form.component';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { ApiService } from './../../../../api.service';
 import { UserService } from 'app/core/user/user.service';
 import { CompanyDetailComponent } from './../company-info/tender-form.component';
-import moment from 'moment';
 
 
 @Component({
@@ -24,7 +23,6 @@ export class TendersComponent implements OnInit, OnDestroy {
 
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 	private _user: User;
-	
 
 	constructor(private dialog: MatDialog,
 				private apiService: ApiService,
@@ -68,7 +66,7 @@ export class TendersComponent implements OnInit, OnDestroy {
 
 	checkAwardTenderCondition = (tender: Tender, action: string): boolean => tender.status === 'Under Evaluation';
 	checkUnAwardTenderCondition = (tender: Tender, action: string): boolean => !['Open', 'Under Evaluation'].includes(tender.status);
-	checkIfTenderIsExpired = (tender: Tender, action: string): boolean => 
+	checkIfTenderIsExpired = (tender: Tender, action: string): boolean =>
 	{
 		// Only Super Admin can change tender status
 		if (this._user && this._user.type === 'Super_Admin') {
@@ -81,7 +79,7 @@ export class TendersComponent implements OnInit, OnDestroy {
 		}
 
 		return false;
-	}
+	};
 
 	ngOnInit(): void {
 		this.userService.user$

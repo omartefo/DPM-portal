@@ -3,9 +3,9 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ProjectsComponent } from './projects/projects.component';
 import { Route, RouterModule } from '@angular/router';
-import { GenericTableModule } from 'app/shared/generic-table/module';
 import { AddProjectFormComponent } from './project-form/project-form.component';
 import { MaterialModule } from 'app/modules/material/material.module';
+import { GenericTableModule } from 'app/shared/components/generic-table/module';
 
 const routes: Route[] = [
     {
@@ -21,11 +21,11 @@ const routes: Route[] = [
   ],
   imports: [
     CommonModule,
-	ReactiveFormsModule,
-	RouterModule.forChild(routes),
+    ReactiveFormsModule,
+    RouterModule.forChild(routes),
 
-	GenericTableModule,
-	MaterialModule
+    GenericTableModule,
+    MaterialModule
   ]
 })
 export class ProjectsModule { }
