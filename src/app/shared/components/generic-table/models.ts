@@ -37,6 +37,7 @@ export interface TableRowAction {
     name: string;
     title: string;
 	action: string;
+	class?: string;
 
 	condition?: (row: any, action: string) => boolean;
 }

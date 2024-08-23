@@ -46,7 +46,7 @@ export class TendersComponent implements OnInit, OnDestroy {
 				{ name: 'unAwardTender', title: 'Un-Award Tender', action: 'OnUnAwardTender', condition: this.checkUnAwardTenderCondition },
 				{ name: 'changeStatus', title: 'Change Status', action: 'OnChangeStatus', condition: this.checkIfTenderIsExpired },
 				{ name: 'edit', title: 'Edit', action: 'OnEdit' },
-				{ name: 'delete', title: 'Delete', action: 'OnDelete' },
+				{ name: 'delete', title: 'Delete', action: 'OnDelete', class: 'delete-fg' },
 			],
 
 			columns: [
@@ -64,9 +64,9 @@ export class TendersComponent implements OnInit, OnDestroy {
 		};
 	}
 
-	checkAwardTenderCondition = (tender: Tender, action: string): boolean => tender.status === 'Under Evaluation';
-	checkUnAwardTenderCondition = (tender: Tender, action: string): boolean => !['Open', 'Under Evaluation'].includes(tender.status);
-	checkIfTenderIsExpired = (tender: Tender, action: string): boolean =>
+	checkAwardTenderCondition = (tender: Tender): boolean => tender.status === 'Under Evaluation';
+	checkUnAwardTenderCondition = (tender: Tender): boolean => !['Open', 'Under Evaluation'].includes(tender.status);
+	checkIfTenderIsExpired = (tender: Tender): boolean =>
 	{
 		// Only Super Admin can change tender status
 		if (this._user && this._user.type === 'Super_Admin') {
