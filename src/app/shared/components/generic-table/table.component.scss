@@ -108,7 +108,27 @@
 
 	.delete-fg {
 		color: #dc2626 !important;
-	}	
+	}
+
+	.status {
+		border-radius: 10px;
+		text-align: center;
+		padding: 2px;
+		margin-right: 1rem;
+		font-weight: 500;
+
+		&.awarded {
+			background-color: #A5C7E7;
+		}
+
+		&.under_evaluation {
+			background-color: #FFEB99;
+		}
+
+		&.open {
+			background-color: #A8D5BA;
+		}
+	}
 }
 
 ::ng-deep .mat-sort-header-stem {

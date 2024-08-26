@@ -24,6 +24,8 @@ export interface TableColumn {
     format?: TableFormat;
 	isArray?: boolean;
 	columnName?: string;
+	applyStatusClass?: boolean;
+	width?: string;
 }
 
 export interface WhereData {

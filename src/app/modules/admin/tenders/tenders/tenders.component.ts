@@ -58,7 +58,7 @@ export class TendersComponent implements OnInit, OnDestroy {
 				{ name: 'minimumPrice', title: 'Minimum Price', format: 'number' },
 				{ name: 'maximumPrice', title: 'Maximum Price', format: 'number' },
 				{ name: 'location', title: 'Location' },
-				{ name: 'status', title: 'Status' },
+				{ name: 'status', title: 'Status', applyStatusClass: true, width: '9rem' },
 				{ name: 'user.company.name', title: 'Company', format: 'url' },
 			]
 		};
