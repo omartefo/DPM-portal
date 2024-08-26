@@ -25,7 +25,7 @@ export class BidsComponent {
 			searchColumn: 'tenderNumber',
 
 			rowActions: [
-				{ name: 'delete', title: 'Delete', action: 'OnDelete' },
+				{ name: 'delete', title: 'Delete', action: 'OnDelete', class: 'delete-fg' },
 			],
 
 			columns: [

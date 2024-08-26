@@ -37,10 +37,10 @@ export class ProjectsComponent {
 
 			rowActions: [
 				{ name: 'edit', title: 'Edit', action: 'OnEdit' },
-				{ name: 'delete', title: 'Delete', action: 'OnDelete' },
+				{ name: 'delete', title: 'Delete', action: 'OnDelete', class: 'delete-fg' },
 				{ name: 'addTender', title: 'Add Tender', action: 'OnAddTender', condition: this.checkAddTenderBtnCondition },
 				{ name: 'approve', title: 'Approve', action: 'OnApprove', condition: this.checkApproveBtnCondition },
-				{ name: 'disApprove', title: 'Disapprove', action: 'OnDisapprove', condition: this.checkDisApproveBtnCondition }
+				{ name: 'disApprove', title: 'Disapprove', action: 'OnDisapprove', condition: this.checkDisApproveBtnCondition, class: 'delete-fg' }
 			],
 
 			columns: [

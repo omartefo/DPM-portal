@@ -26,7 +26,7 @@ export class DownloadCenterComponent {
 
 			rowActions: [
 				{ name: 'edit', title: 'Edit', action: 'OnEdit' },
-				{ name: 'delete', title: 'Delete', action: 'OnDelete' }
+				{ name: 'delete', title: 'Delete', action: 'OnDelete', class: 'delete-fg' }
 			],
 
 			columns: [
