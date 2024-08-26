@@ -85,7 +85,7 @@ export class AdminUsersComponent implements OnInit, OnDestroy {
 				// Only "Super Admin" can reset passwords
 				{ name: 'resetPassword', title: 'Reset Password', action: 'OnResetPassword', condition: this.isSuperAdmin },
 				// Logged In user can delete his/her own account; Also only Super Admin can delete records
-				{ name: 'delete', title: 'Delete', action: 'OnDelete', condition: this.isNotLoggedInUser },
+				{ name: 'delete', title: 'Delete', action: 'OnDelete', condition: this.isNotLoggedInUser, class: 'delete-fg' },
 				{ name: 'approve', title: 'Approve', action: 'OnApprove', condition: this.checkApproveBtnCondition },
 				// Logged In user can not disapprove his/her own account; Also Super Admin can not be changed.
 				{ name: 'disApprove', title: 'Disapprove', action: 'OnDisapprove', condition: this.checkDisApproveBtnCondition, class: 'delete-fg' }
@@ -109,12 +109,19 @@ export class AdminUsersComponent implements OnInit, OnDestroy {
 		if (user.type === UserTypes.superAdmin) {
 			return false;
 		}
+
+		// Employee can not disapprove admin account;
+		if (user.type === 'Admin' && this.loggedInUser.type === 'Employee') {
+			return false;
+		}
+
 		return user.isAccountActive && this.isNotLoggedInUser(user);
 	};
 	private isNotLoggedInUser = (user: User): boolean => user.userId !== this.loggedInUser.userId;
 	private isSuperAdmin = (): boolean => this.loggedInUser.type === UserTypes.superAdmin;
 	private checkIfCanEdit = (user: User): boolean => {
-		if (this.loggedInUser.type !== UserTypes.superAdmin && user.type === UserTypes.superAdmin) {
+		// No user can edit super admin record
+		if (user.type === UserTypes.superAdmin && this.loggedInUser.type !== UserTypes.superAdmin) {
 			return false;
 		}
 
