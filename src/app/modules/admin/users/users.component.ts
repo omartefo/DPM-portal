@@ -6,6 +6,7 @@ import { TableConfig, TableAction, TableSignal } from 'app/shared/components/gen
 import { UserAddFormComponent } from './user-add-form/user-add-form.component';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { ApiService } from 'app/api.service';
+import { UserTypes } from 'app/shared/constants';
 
 
 @Component({
@@ -34,12 +35,12 @@ export class UsersComponent {
 
 			rowActions: [
 				{ name: 'edit', title: 'Edit', action: 'OnEdit' },
-				{ name: 'delete', title: 'Delete', action: 'OnDelete' },
+				{ name: 'delete', title: 'Delete', action: 'OnDelete', class: 'delete-fg' },
 				{ name: 'approve', title: 'Approve', action: 'OnApprove', condition: this.checkApproveBtnCondition },
-				{ name: 'disApprove', title: 'Disapprove', action: 'OnDisapprove', condition: this.checkDisApproveBtnCondition }
+				{ name: 'disApprove', title: 'Disapprove', action: 'OnDisapprove', condition: this.checkDisApproveBtnCondition, class: 'delete-fg' }
 			],
 
-			where: { column: 'type', op: 'ne', search: ['Super_Admin', 'Admin', 'Employee'] },
+			where: { column: 'type', op: 'ne', search: [UserTypes.superAdmin, UserTypes.admin, UserTypes.employee] },
 
 			columns: [
 				{ name: 'name', title: 'Name' },
@@ -53,8 +54,8 @@ export class UsersComponent {
 		};
 	}
 
-	checkApproveBtnCondition = (row: any, action: string): boolean => !row.isAccountActive;
-	checkDisApproveBtnCondition = (row: any, action: string): boolean => row.isAccountActive;
+	checkApproveBtnCondition = (row: any): boolean => !row.isAccountActive;
+	checkDisApproveBtnCondition = (row: any): boolean => row.isAccountActive;
 
 	onTableSignal(ev: TableSignal): void {
 		switch(ev.type) {
