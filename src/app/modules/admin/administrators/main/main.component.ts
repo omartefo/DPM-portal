@@ -6,7 +6,7 @@ import { ApiService } from 'app/api.service';
 import { TableAction, TableConfig, TableSignal } from 'app/shared/components/generic-table/models';
 import { Subject, Subscription } from 'rxjs';
 import { AdminAddFormComponent } from './../admin-form/admin-form.component';
-import { UserTypes } from 'app/shared/constants/constants';
+import { UserTypes } from 'app/shared/constants';
 import { User } from 'app/models';
 import { UserService } from 'app/core/user/user.service';
 
@@ -73,9 +73,14 @@ export class AdminUsersComponent implements OnInit, OnDestroy {
 			searchColumn: 'name',
 
 			rowActions: [
-				{ name: 'edit', title: 'Edit', action: 'OnEdit' },
+				// Only "Super Admin" can edit his/her record.
+				{ name: 'edit', title: 'Edit', action: 'OnEdit', condition: this.checkIfCanEdit },
+				// Only "Super Admin" can reset passwords
+				{ name: 'resetPassword', title: 'Reset Password', action: 'OnResetPassword', condition: this.isSuperAdmin },
+				// Logged In user can delete his/her own account; Also only Super Admin can delete records
 				{ name: 'delete', title: 'Delete', action: 'OnDelete', condition: this.isNotLoggedInUser },
 				{ name: 'approve', title: 'Approve', action: 'OnApprove', condition: this.checkApproveBtnCondition },
+				// Logged In user can not disapprove his/her own account; Also Super Admin can not be changed.
 				{ name: 'disApprove', title: 'Disapprove', action: 'OnDisapprove', condition: this.checkDisApproveBtnCondition, class: 'delete-fg' }
 			],
 
@@ -93,8 +98,21 @@ export class AdminUsersComponent implements OnInit, OnDestroy {
 	}
 
 	private checkApproveBtnCondition = (user: User): boolean => !user.isAccountActive;
-	private checkDisApproveBtnCondition = (user: User): boolean => user.isAccountActive && this.isNotLoggedInUser(user);
+	private checkDisApproveBtnCondition = (user: User): boolean => {
+		if (user.type === UserTypes.superAdmin) {
+			return false;
+		}
+		return user.isAccountActive && this.isNotLoggedInUser(user);
+	};
 	private isNotLoggedInUser = (user: User): boolean => user.userId !== this.loggedInUser.userId;
+	private isSuperAdmin = (): boolean => this.loggedInUser.type === UserTypes.superAdmin;
+	private checkIfCanEdit = (user: User): boolean => {
+		if (this.loggedInUser.type !== UserTypes.superAdmin && user.type === UserTypes.superAdmin) {
+			return false;
+		}
+
+		return true;
+	};
 
 	private getLoggedInUser(): void {
 		this.userSubscription = this.userService.user$.subscribe((user) => {

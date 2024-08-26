@@ -6,7 +6,7 @@ import { TableConfig, TableAction, TableSignal } from 'app/shared/components/gen
 import { UserAddFormComponent } from './user-add-form/user-add-form.component';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { ApiService } from 'app/api.service';
-import { UserTypes } from 'app/shared/constants/constants';
+import { UserTypes } from 'app/shared/constants';
 import { User } from 'app/models';
 
 
