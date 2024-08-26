@@ -72,6 +72,13 @@ export class AdminUsersComponent implements OnInit, OnDestroy {
 
 			searchColumn: 'name',
 
+			/*
+				Generic table level permissions
+				--------------------------------
+				1. Admin can edit record but can not perform delete operation
+				2. Employee can only view data but can not perform edit/delete operations
+			*/
+
 			rowActions: [
 				// Only "Super Admin" can edit his/her record.
 				{ name: 'edit', title: 'Edit', action: 'OnEdit', condition: this.checkIfCanEdit },

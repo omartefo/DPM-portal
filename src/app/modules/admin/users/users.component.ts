@@ -58,6 +58,12 @@ export class UsersComponent {
 
 			searchColumn: 'mobileNumber',
 
+			/*
+				Generic table level permissions
+				--------------------------------
+				1. Admin can edit record but can not perform delete operation
+				2. Employee can only view data but can not perform edit/delete operations
+			*/
 			rowActions: [
 				{ name: 'edit', title: 'Edit', action: 'OnEdit' },
 				{ name: 'delete', title: 'Delete', action: 'OnDelete', class: 'delete-fg' },
