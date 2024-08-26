@@ -10,9 +10,11 @@ export interface User {
 	userId: number;
 	name: string;
 	email: string;
-	mobileNumber: string;
 	type: UserType;
-	company: UserCompany;
+	mobileNumber?: string;
+	company?: UserCompany;
+	avatar?: string;
+	isAccountActive?: boolean;
 }
 
 export interface UserCompany {

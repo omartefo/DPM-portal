@@ -1,11 +1,11 @@
 import { environment } from './../../../environments/environment';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, of, switchMap, throwError } from 'rxjs';
+import { Observable, of, switchMap } from 'rxjs';
 import { AuthUtils } from 'app/core/auth/auth.utils';
 import { UserService } from 'app/core/user/user.service';
 import jwt_decode  from 'jwt-decode';
-import { User } from '../user/user.types';
+import { User } from 'app/models';
 
 
 @Injectable()
