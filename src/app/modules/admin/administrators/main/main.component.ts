@@ -1,12 +1,14 @@
 import { ToastrService } from 'ngx-toastr';
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { ApiService } from 'app/api.service';
 import { TableAction, TableConfig, TableSignal } from 'app/shared/components/generic-table/models';
-import { Subject } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 import { AdminAddFormComponent } from './../admin-form/admin-form.component';
-import { UserTypes } from 'app/shared/constants';
+import { UserTypes } from 'app/shared/constants/constants';
+import { User } from 'app/models';
+import { UserService } from 'app/core/user/user.service';
 
 
 @Component({
@@ -14,47 +16,30 @@ import { UserTypes } from 'app/shared/constants';
   templateUrl: './main.component.html',
   styleUrls: ['./main.component.scss']
 })
-export class AdminUsersComponent {
+export class AdminUsersComponent implements OnInit, OnDestroy {
 	tableConfig: TableConfig;
 	actions = new Subject<TableAction>();
+	userSubscription: Subscription;
+	loggedInUser: User;
 
 	constructor(private dialog: MatDialog,
 				private apiService: ApiService,
 				private toastr: ToastrService,
+				private userService: UserService,
 				private confirmationService: FuseConfirmationService)
 	{
-		this.tableConfig = {
-			title: 'Admin Users',
-			slug: 'users',
-			primaryKey: 'userId',
-
-			showAdd: true,
-			showSearch: true,
-
-			searchColumn: 'name',
-
-			rowActions: [
-				{ name: 'edit', title: 'Edit', action: 'OnEdit' },
-				{ name: 'delete', title: 'Delete', action: 'OnDelete' },
-				{ name: 'approve', title: 'Approve', action: 'OnApprove', condition: this.checkApproveBtnCondition },
-				{ name: 'disApprove', title: 'Disapprove', action: 'OnDisapprove', condition: this.checkDisApproveBtnCondition, class: 'delete-fg' }
-			],
-
-			where: { column: 'type', op: 'eq', search: [UserTypes.superAdmin, UserTypes.admin, UserTypes.employee]},
-
-			columns: [
-				{ name: 'name', title: 'Name' },
-				{ name: 'email', title: 'Email' },
-				{ name: 'mobileNumber', title: 'Mobile Number' },
-				{ name: 'type', title: 'Group Type' },
-				{ name: 'isAccountActive', title: 'Is Account Active', format: 'boolean' },
-				{ name: 'createdAt', title: 'Date Created', format: 'datetime' },
-			]
-		};
+		this.initConfig();
 	}
 
-	checkApproveBtnCondition = (row: any): boolean => !row.isAccountActive;
-	checkDisApproveBtnCondition = (row: any): boolean => row.isAccountActive;
+	ngOnInit(): void {
+		this.getLoggedInUser();
+	}
+
+	ngOnDestroy(): void {
+		if (this.userSubscription) {
+			this.userSubscription.unsubscribe();
+		}
+	}
 
 	onTableSignal(ev: TableSignal): void {
 		switch(ev.type) {
@@ -76,15 +61,58 @@ export class AdminUsersComponent {
 		}
 	}
 
-	onHandleUser(row = null): void {
+	private initConfig(): void {
+		this.tableConfig = {
+			title: 'Admin Users',
+			slug: 'users',
+			primaryKey: 'userId',
+
+			showAdd: true,
+			showSearch: true,
+
+			searchColumn: 'name',
+
+			rowActions: [
+				{ name: 'edit', title: 'Edit', action: 'OnEdit' },
+				{ name: 'delete', title: 'Delete', action: 'OnDelete', condition: this.isNotLoggedInUser },
+				{ name: 'approve', title: 'Approve', action: 'OnApprove', condition: this.checkApproveBtnCondition },
+				{ name: 'disApprove', title: 'Disapprove', action: 'OnDisapprove', condition: this.checkDisApproveBtnCondition, class: 'delete-fg' }
+			],
+
+			where: { column: 'type', op: 'eq', search: [UserTypes.superAdmin, UserTypes.admin, UserTypes.employee]},
+
+			columns: [
+				{ name: 'name', title: 'Name' },
+				{ name: 'email', title: 'Email' },
+				{ name: 'mobileNumber', title: 'Mobile Number' },
+				{ name: 'type', title: 'Group Type' },
+				{ name: 'isAccountActive', title: 'Is Account Active', format: 'boolean' },
+				{ name: 'createdAt', title: 'Date Created', format: 'datetime' },
+			]
+		};
+	}
+
+	private checkApproveBtnCondition = (user: User): boolean => !user.isAccountActive;
+	private checkDisApproveBtnCondition = (user: User): boolean => user.isAccountActive && this.isNotLoggedInUser(user);
+	private isNotLoggedInUser = (user: User): boolean => user.userId !== this.loggedInUser.userId;
+
+	private getLoggedInUser(): void {
+		this.userSubscription = this.userService.user$.subscribe((user) => {
+			if (user) {
+				this.loggedInUser = user;
+			}
+		});
+	}
+
+	private onHandleUser(user: User = null): void {
 		const dialog = this.dialog.open(AdminAddFormComponent, {
 			width: '40%',
 			maxHeight: '90%',
 			height: '90%'
 		});
 
-		if (row) {
-			dialog.componentInstance.id = row.userId;
+		if (user) {
+			dialog.componentInstance.id = user.userId;
 		}
 
 		dialog.afterClosed().subscribe((resp: boolean) => {
@@ -94,8 +122,9 @@ export class AdminUsersComponent {
 		});
 	}
 
-	onApproveDisapproveUser(action: 'approve' | 'disapprove', user: any): void {
+	private onApproveDisapproveUser(action: 'approve' | 'disapprove', user: any): void {
 		const payload = { isAccountActive: false };
+
 		if (action === 'approve') {
 			payload.isAccountActive = true;
 		}

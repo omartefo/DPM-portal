@@ -15,7 +15,7 @@ import { GenericApiResponse } from '../../../../models';
 })
 export class AdminAddFormComponent implements OnInit {
 	adminTypes: string[] = ['Admin', 'Employee'];
-	id: string;
+	id: number;
 	theForm: FormGroup;
 	disableSaveBtn = false;
 

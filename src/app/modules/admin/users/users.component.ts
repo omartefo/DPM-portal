@@ -6,7 +6,8 @@ import { TableConfig, TableAction, TableSignal } from 'app/shared/components/gen
 import { UserAddFormComponent } from './user-add-form/user-add-form.component';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { ApiService } from 'app/api.service';
-import { UserTypes } from 'app/shared/constants';
+import { UserTypes } from 'app/shared/constants/constants';
+import { User } from 'app/models';
 
 
 @Component({
@@ -23,6 +24,30 @@ export class UsersComponent {
 				private toastr: ToastrService,
 				private confirmationService: FuseConfirmationService)
 	{
+		this.initConfig();
+	}
+
+	onTableSignal(ev: TableSignal): void {
+		switch(ev.type) {
+			case 'OpenForm':
+				this.onHandleUser();
+				break;
+
+			case 'OnEdit':
+				this.onHandleUser(ev.row);
+				break;
+
+			case 'OnApprove':
+				this.onApproveDisapproveUser('approve', ev.row);
+				break;
+
+			case 'OnDisapprove':
+				this.onApproveDisapproveUser('disapprove', ev.row);
+				break;
+		}
+	}
+
+	private initConfig(): void {
 		this.tableConfig = {
 			title: 'Users',
 			slug: 'users',
@@ -54,38 +79,18 @@ export class UsersComponent {
 		};
 	}
 
-	checkApproveBtnCondition = (row: any): boolean => !row.isAccountActive;
-	checkDisApproveBtnCondition = (row: any): boolean => row.isAccountActive;
+	private checkApproveBtnCondition = (user: User): boolean => !user.isAccountActive;
+	private checkDisApproveBtnCondition = (user: User): boolean => user.isAccountActive;
 
-	onTableSignal(ev: TableSignal): void {
-		switch(ev.type) {
-			case 'OpenForm':
-				this.onHandleUser();
-				break;
-
-			case 'OnEdit':
-				this.onHandleUser(ev.row);
-				break;
-
-			case 'OnApprove':
-				this.onApproveDisapproveUser('approve', ev.row);
-				break;
-
-			case 'OnDisapprove':
-				this.onApproveDisapproveUser('disapprove', ev.row);
-				break;
-		}
-	}
-
-	onHandleUser(row = null): void {
+	private onHandleUser(user: User = null): void {
 		const dialog = this.dialog.open(UserAddFormComponent, {
 			width: '40%',
 			maxHeight: '90%',
 			height: '90%'
 		});
 
-		if (row) {
-			dialog.componentInstance.userId = row.userId;
+		if (user) {
+			dialog.componentInstance.userId = user.userId;
 		}
 
 		dialog.afterClosed().subscribe((resp: boolean) => {
@@ -95,7 +100,7 @@ export class UsersComponent {
 		});
 	}
 
-	onApproveDisapproveUser(action: 'approve' | 'disapprove', user: any): void {
+	private onApproveDisapproveUser(action: 'approve' | 'disapprove', user: any): void {
 		const payload = { isAccountActive: false };
 		if (action === 'approve') {
 			payload.isAccountActive = true;
