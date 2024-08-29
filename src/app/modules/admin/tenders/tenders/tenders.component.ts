@@ -1,15 +1,15 @@
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Subject, takeUntil } from 'rxjs';
+import { Component } from '@angular/core';
+import { Subject } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
-import { Tender, User } from 'app/models';
+import { Tender } from 'app/models';
 import { TableConfig, TableAction, TableSignal } from 'app/shared/components/generic-table/models';
 import { AddTenderFormComponent } from 'app/modules/admin/tenders/tender-form/tender-form.component';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { ApiService } from './../../../../api.service';
-import { UserService } from 'app/core/user/user.service';
 import { CompanyDetailComponent } from './../company-info/tender-form.component';
+import { TenderStatuses } from 'app/shared/constants/constants';
 
 
 @Component({
@@ -17,18 +17,14 @@ import { CompanyDetailComponent } from './../company-info/tender-form.component'
   templateUrl: './tenders.component.html',
   styleUrls: ['./tenders.component.scss']
 })
-export class TendersComponent implements OnInit, OnDestroy {
+export class TendersComponent {
 	tableConfig: TableConfig;
 	actions = new Subject<TableAction>();
-
-    private _unsubscribeAll: Subject<any> = new Subject<any>();
-	private _user: User;
 
 	constructor(private dialog: MatDialog,
 				private apiService: ApiService,
 				private toastr: ToastrService,
 				private router: Router,
-				private userService: UserService,
 				private confirmationService: FuseConfirmationService)
 	{
 		this.tableConfig = {
@@ -42,10 +38,9 @@ export class TendersComponent implements OnInit, OnDestroy {
 			searchColumn: 'tenderNumber',
 
 			rowActions: [
-				{ name: 'awardTender', title: 'Award Tender', action: 'OnAwardTender', condition: this.checkAwardTenderCondition },
+				{ name: 'awardTender', title: 'Award Tender', action: 'OnAwardTender', condition: this.isTenderUnderEvalualtion },
 				{ name: 'unAwardTender', title: 'Un-Award Tender', action: 'OnUnAwardTender', condition: this.checkUnAwardTenderCondition },
-				{ name: 'changeStatus', title: 'Change Status', action: 'OnChangeStatus', condition: this.checkIfTenderIsExpired },
-				{ name: 'edit', title: 'Edit', action: 'OnEdit' },
+				{ name: 'edit', title: 'Edit', action: 'OnEdit', condition: this.canEditTender },
 				{ name: 'delete', title: 'Delete', action: 'OnDelete', class: 'delete-fg' },
 			],
 
@@ -64,35 +59,9 @@ export class TendersComponent implements OnInit, OnDestroy {
 		};
 	}
 
-	checkAwardTenderCondition = (tender: Tender): boolean => tender.status === 'Under Evaluation';
-	checkUnAwardTenderCondition = (tender: Tender): boolean => !['Open', 'Under Evaluation'].includes(tender.status);
-	checkIfTenderIsExpired = (tender: Tender): boolean =>
-	{
-		// Only Super Admin can change tender status
-		if (this._user && this._user.type === 'Super_Admin') {
-			// Check if tender is closed
-			const currentTime = new Date().getTime();
-
-			if (tender.status === 'Open' && (new Date(tender.closingDate).getTime() - currentTime) < 0) {
-				return true;
-			}
-		}
-
-		return false;
-	};
-
-	ngOnInit(): void {
-		this.userService.user$
-            .pipe((takeUntil(this._unsubscribeAll)))
-            .subscribe((user: User) => {
-                this._user = user;
-            });
-	}
-
-	ngOnDestroy(): void {
-		this._unsubscribeAll.next(null);
-		this._unsubscribeAll.complete();
-	}
+	isTenderUnderEvalualtion = (tender: Tender): boolean => tender.status === TenderStatuses.underEvaluation;
+	checkUnAwardTenderCondition = (tender: Tender): boolean => ![TenderStatuses.open, TenderStatuses.underEvaluation].includes(tender.status);
+	canEditTender = (tender: Tender): boolean => tender.status !== TenderStatuses.underEvaluation;
 
 	onTableSignal(ev: TableSignal): void {
 		switch(ev.type) {
@@ -114,10 +83,6 @@ export class TendersComponent implements OnInit, OnDestroy {
 
 			case 'CellAction':
 				this.onCompanyCellClick(ev.row);
-				break;
-
-			case 'OnChangeStatus':
-				this.onChangeTenderStatus(ev.row);
 				break;
 		}
 	}
@@ -164,12 +129,5 @@ export class TendersComponent implements OnInit, OnDestroy {
 		});
 
 		dialog.componentInstance.company = tender.user.company;
-	}
-
-	onChangeTenderStatus(tender: Tender): void {
-		this.apiService.patch(`tenders/${tender.tenderId}/changeStatus`, {}).subscribe({
-			next: () => this.actions.next({ type: 'reload'}),
-			error: (error: any) => this.toastr.error(error)
-		});
 	}
 }

@@ -1,3 +1,5 @@
+import { TenderStatuses } from './shared/constants/constants';
+
 export type UserType = 'Client' | 'Supplier' | 'Contractor' | 'Consultant' | 'Super_Admin' | 'Admin' | 'Employee';
 
 export interface GenericApiResponse {
@@ -45,7 +47,7 @@ export interface Tender {
 	maximumPrice: number;
 	location: string;
 	description: string;
-	status: 'Open' | 'Under Evaluation';
+	status: TenderStatuses;
 	projectId: number;
 
 	// Project for which this tender is made, remember client -> project -> tender;

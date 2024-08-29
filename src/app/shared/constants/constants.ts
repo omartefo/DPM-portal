@@ -7,3 +7,9 @@ export enum UserTypes {
     supplier = 'Supplier',
     consultant = 'Consultant'
 }
+
+export enum TenderStatuses {
+    open = 'Open',
+    underEvaluation = 'Under Evaluation',
+    awarded = 'Awarded'
+};
