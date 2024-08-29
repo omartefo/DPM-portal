@@ -6,7 +6,7 @@ import { ApiService } from 'app/api.service';
 import { TableAction, TableConfig, TableSignal } from 'app/shared/components/generic-table/models';
 import { Subject, Subscription } from 'rxjs';
 import { AdminAddFormComponent } from './../admin-form/admin-form.component';
-import { UserTypes } from 'app/shared/constants';
+import { UserTypes } from 'app/shared/constants/constants';
 import { User } from 'app/models';
 import { UserService } from 'app/core/user/user.service';
 

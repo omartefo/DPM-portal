@@ -7,7 +7,7 @@ import { ApiService } from 'app/api.service';
 import { Helpers } from 'app/shared/helpers';
 import Validation from 'app/shared/validators';
 import { GenericApiResponse } from './../../../../models';
-import { UserTypes } from 'app/shared/constants';
+import { UserTypes } from 'app/shared/constants/constants';
 
 
 @Component({
