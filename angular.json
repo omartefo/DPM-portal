@@ -39,7 +39,6 @@
                             "quill"
                         ],
                         "assets": [
-                            "./src/favicon.png",
                             "src/assets",
                             {
                                 "glob": "_redirects",
@@ -125,7 +124,6 @@
                         "karmaConfig": "karma.conf.js",
                         "inlineStyleLanguage": "scss",
                         "assets": [
-                            "src/favicon.png",
                             "src/assets"
                         ],
                         "styles": [
