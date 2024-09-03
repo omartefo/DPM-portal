@@ -75,8 +75,6 @@ export class BiddersPricingComponent implements OnInit {
 	}
 
 	onAwardTender(): void {
-		console.log('User =', this.selectedRow.user);
-
 		const dialog = this.confirmationService.open({
 			title: 'Award Tender',
 			message: `Are you sure, you want to Award Tender #${this.tender.tenderNumber}?`
@@ -84,7 +82,7 @@ export class BiddersPricingComponent implements OnInit {
 
 		dialog.afterClosed().subscribe((resp: 'confirmed' | 'cancelled') => {
 			if (resp === 'confirmed') {
-				const { user } = this.selectedRow.user;
+				const { user } = this.selectedRow;
 
 				const payload = {
 					awardedTo: user.userId,
