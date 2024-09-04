@@ -13,3 +13,7 @@ export enum TenderStatuses {
     underEvaluation = 'Under Evaluation',
     awarded = 'Awarded'
 };
+
+export enum UserConfig {
+    mobileNumberLength = 10
+};

@@ -6,6 +6,7 @@ import { Helpers } from 'app/shared/helpers';
 import Validation from 'app/shared/validators';
 import { ToastrService } from 'ngx-toastr';
 import { GenericApiResponse } from '../../../../models';
+import { UserConfig } from 'app/shared/constants/constants';
 
 
 @Component({
@@ -19,6 +20,8 @@ export class AdminAddFormComponent implements OnInit {
 	theForm: FormGroup;
 	disableSaveBtn = false;
 
+	mobileNumberLength: UserConfig.mobileNumberLength;
+
 	constructor(private apiService: ApiService,
 				private fb: FormBuilder,
 				private toastr: ToastrService,
@@ -26,7 +29,11 @@ export class AdminAddFormComponent implements OnInit {
 	{
 		this.theForm = fb.group({
 			name: [null, [Validators.required]],
-			mobileNumber: [null, [Validators.required, Validators.minLength(10), Validators.maxLength(10)]],
+			mobileNumber: [null, [
+				Validators.required,
+				Validators.minLength(this.mobileNumberLength),
+				Validators.maxLength(this.mobileNumberLength)
+			]],
 			email: [null, [Validators.required, Validators.email]],
 			password: [null, [Validators.required]],
 			confirmPassword: [null, [Validators.required]],

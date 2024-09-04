@@ -37,8 +37,8 @@
 			<input matInput placeholder="Mobile Number" (keydown)="numericOnly($event)" formControlName="mobileNumber">
 			<mat-error *ngIf="theForm.controls['mobileNumber'].errors">
 				<div *ngIf="theForm.controls['mobileNumber'].hasError('required')">Mobile Number is required.</div>
-				<div *ngIf="theForm.controls['mobileNumber'].hasError('minlength')">minimum length is 8 characters.</div>
-				<div *ngIf="theForm.controls['mobileNumber'].hasError('maxlength')">maximum length is 8 characters.</div>
+				<div *ngIf="theForm.controls['mobileNumber'].hasError('minlength')">minimum length is {{ mobileNumberLength }} characters.</div>
+				<div *ngIf="theForm.controls['mobileNumber'].hasError('maxlength')">maximum length is {{ mobileNumberLength }} characters.</div>
 			</mat-error>
 		</mat-form-field>
 	

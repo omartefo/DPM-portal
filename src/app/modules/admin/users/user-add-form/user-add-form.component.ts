@@ -7,7 +7,7 @@ import { ApiService } from 'app/api.service';
 import { Helpers } from 'app/shared/helpers';
 import Validation from 'app/shared/validators';
 import { GenericApiResponse } from './../../../../models';
-import { UserTypes } from 'app/shared/constants/constants';
+import { UserConfig, UserTypes } from 'app/shared/constants/constants';
 
 
 @Component({
@@ -20,6 +20,7 @@ export class UserAddFormComponent implements OnInit {
 	userId: number;
 	theForm: FormGroup;
 	disableSaveBtn = false;
+	mobileNumberLength: UserConfig.mobileNumberLength;
 
 	constructor(private apiService: ApiService,
 				private fb: FormBuilder,
@@ -28,7 +29,11 @@ export class UserAddFormComponent implements OnInit {
 	{
 		this.theForm = fb.group({
 			name: [null, [Validators.required]],
-			mobileNumber: [null, [Validators.required, Validators.minLength(10), Validators.maxLength(10)]],
+			mobileNumber: [null, [
+				Validators.required,
+				Validators.minLength(this.mobileNumberLength),
+				Validators.maxLength(this.mobileNumberLength)
+			]],
 			email: [null, [Validators.required, Validators.email]],
 			password: [null, [Validators.required]],
 			confirmPassword: [null, [Validators.required]],
