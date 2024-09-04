@@ -15,5 +15,5 @@ export enum TenderStatuses {
 };
 
 export enum UserConfig {
-    mobileNumberLength = 10
+    mobileNumberLength = 8
 };
