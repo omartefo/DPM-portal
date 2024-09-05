@@ -20,7 +20,7 @@ export class UserAddFormComponent implements OnInit {
 	userId: number;
 	theForm: FormGroup;
 	disableSaveBtn = false;
-	mobileNumberLength: UserConfig.mobileNumberLength;
+	mobileNumberLength: number = UserConfig.mobileNumberLength;
 
 	constructor(private apiService: ApiService,
 				private fb: FormBuilder,
