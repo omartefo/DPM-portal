@@ -9,6 +9,7 @@ import { AdminAddFormComponent } from './../admin-form/admin-form.component';
 import { UserTypes } from 'app/shared/constants/constants';
 import { User } from 'app/models';
 import { UserService } from 'app/core/user/user.service';
+import { ResetPasswordComponent } from '../reset-password/reset-password.component';
 
 
 @Component({
@@ -57,6 +58,10 @@ export class AdminUsersComponent implements OnInit, OnDestroy {
 
 			case 'OnDisapprove':
 				this.onApproveDisapproveUser('disapprove', ev.row);
+				break;
+
+			case 'OnResetPassword':
+				this.onResetPassword(ev.row);
 				break;
 		}
 	}
@@ -171,6 +176,22 @@ export class AdminUsersComponent implements OnInit, OnDestroy {
 					next: () => this.actions.next({ type: 'reload'}),
 					error: (error: any) => this.toastr.error(error)
 				});
+			}
+		});
+	}
+
+	private onResetPassword(user: User): void {
+		const dialog = this.dialog.open(ResetPasswordComponent, {
+			width: '30vw',
+			maxHeight: '50vh',
+			height: '50vh'
+		});
+
+		dialog.componentInstance.userId = user.userId;
+
+		dialog.afterClosed().subscribe((resp: boolean) => {
+			if (resp) {
+				this.actions.next({ type: 'reload'});
 			}
 		});
 	}

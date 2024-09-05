@@ -8,6 +8,7 @@ import { MaterialModule } from 'app/modules/material/material.module';
 import { AdminUsersComponent } from './main/main.component';
 import { AdminAddFormComponent } from './admin-form/admin-form.component';
 import { GenericTableModule } from 'app/shared/components/generic-table/module';
+import { ResetPasswordComponent } from './reset-password/reset-password.component';
 
 const routes: Route[] = [
     {
@@ -19,7 +20,8 @@ const routes: Route[] = [
 @NgModule({
 	declarations: [
 		AdminUsersComponent,
-		AdminAddFormComponent
+		AdminAddFormComponent,
+		ResetPasswordComponent
 	],
 	imports: [
 		CommonModule,
