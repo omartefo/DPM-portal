@@ -1,15 +1,15 @@
-import { MaterialModule } from 'app/modules/material/material.module';
+import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { ApiService } from 'app/api.service';
-import { CommonModule } from '@angular/common';
 import { GenericApiResponse, TenderDocumentSignal } from 'app/models';
-import { Project } from '../../../../models';
-import { NgxMatTimepickerModule } from 'ngx-mat-timepicker';
-import moment from 'moment';
-import { ToastrService } from 'ngx-toastr';
+import { MaterialModule } from 'app/modules/material/material.module';
 import Validation from 'app/shared/validators';
+import moment from 'moment';
+import { NgxMatTimepickerModule } from 'ngx-mat-timepicker';
+import { ToastrService } from 'ngx-toastr';
+import { Project } from '../../../../models';
 import { TenderDocumentComponent } from './tender-document/tender-document.component';
 
 
@@ -83,6 +83,7 @@ export class AddTenderFormComponent implements OnInit
 		this.apiService.get(`tenders/${this.tenderId}`).subscribe({
 			next: (resp: GenericApiResponse) => {
 				this.theForm.patchValue(resp.data['tender']);
+				this.currentDate = this.theForm.get('openingDate').value;
 				this.openingTime = moment(this.theForm.get('openingDate').value).format('hh:mm A');
 				this.closingTime = moment(this.theForm.get('closingDate').value).format('hh:mm A');
 				this.getAllProjects();

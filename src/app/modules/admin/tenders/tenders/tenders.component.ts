@@ -1,15 +1,15 @@
-import { Router } from '@angular/router';
-import { ToastrService } from 'ngx-toastr';
 import { Component } from '@angular/core';
-import { Subject } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
-import { Tender } from 'app/models';
-import { TableConfig, TableAction, TableSignal } from 'app/shared/components/generic-table/models';
-import { AddTenderFormComponent } from 'app/modules/admin/tenders/tender-form/tender-form.component';
+import { Router } from '@angular/router';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
+import { Tender } from 'app/models';
+import { AddTenderFormComponent } from 'app/modules/admin/tenders/tender-form/tender-form.component';
+import { TableAction, TableConfig, TableSignal } from 'app/shared/components/generic-table/models';
+import { TenderStatuses } from 'app/shared/constants/constants';
+import { ToastrService } from 'ngx-toastr';
+import { Subject } from 'rxjs';
 import { ApiService } from './../../../../api.service';
 import { CompanyDetailComponent } from './../company-info/tender-form.component';
-import { TenderStatuses } from 'app/shared/constants/constants';
 
 
 @Component({
@@ -40,7 +40,7 @@ export class TendersComponent {
 			rowActions: [
 				{ name: 'awardTender', title: 'Award Tender', action: 'OnAwardTender', condition: this.isTenderUnderEvalualtion },
 				{ name: 'unAwardTender', title: 'Un-Award Tender', action: 'OnUnAwardTender', condition: this.checkUnAwardTenderCondition },
-				{ name: 'edit', title: 'Edit', action: 'OnEdit', condition: this.canEditTender },
+				{ name: 'edit', title: 'Edit', action: 'OnEdit' },
 				{ name: 'delete', title: 'Delete', action: 'OnDelete', class: 'delete-fg' },
 			],
 
