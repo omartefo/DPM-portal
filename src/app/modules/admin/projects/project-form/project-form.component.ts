@@ -43,7 +43,7 @@ export class AddProjectFormComponent implements OnInit {
 	}
 
 	getAllClients(): void {
-		this.apiService.get('users?type=Client').subscribe({
+		this.apiService.get('users?type=Client&limit=all').subscribe({
 			next: (resp: GenericApiResponse) => this.clients = resp.data['users'].rows,
 			error: (error: any) => this.toastr.error(error)
 		});
