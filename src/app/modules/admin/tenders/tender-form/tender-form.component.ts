@@ -73,7 +73,7 @@ export class AddTenderFormComponent implements OnInit
 	}
 
 	getAllProjects(): void {
-		this.apiService.get('projects?isApproved=true').subscribe({
+		this.apiService.get('projects?isApproved=true&limit=all').subscribe({
 			next: (resp: GenericApiResponse) => this.projects = resp.data['projects'].rows,
 			error: (error: any) => this.toastr.error(error)
 		});
