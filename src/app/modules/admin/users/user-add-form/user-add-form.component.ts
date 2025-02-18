@@ -1,13 +1,13 @@
-import { ToastrService } from 'ngx-toastr';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatSelectChange } from '@angular/material/select';
 import { ApiService } from 'app/api.service';
+import { UserConfig, UserTypes } from 'app/shared/constants/constants';
 import { Helpers } from 'app/shared/helpers';
 import Validation from 'app/shared/validators';
-import { GenericApiResponse } from './../../../../models';
-import { UserConfig, UserTypes } from 'app/shared/constants/constants';
+import { ToastrService } from 'ngx-toastr';
+import { GenericApiResponse, User } from './../../../../models';
 
 
 @Component({
@@ -18,12 +18,13 @@ import { UserConfig, UserTypes } from 'app/shared/constants/constants';
 export class UserAddFormComponent implements OnInit {
 	clientTypes: string[] = ['Client', 'Supplier', 'Contractor', 'Consultant'];
 	userId: number;
+	user: User;
 	theForm: FormGroup;
 	disableSaveBtn = false;
 	mobileNumberLength: number = UserConfig.mobileNumberLength;
 
 	constructor(private apiService: ApiService,
-				private fb: FormBuilder,
+				fb: FormBuilder,
 				private toastr: ToastrService,
 				private dialogRef: MatDialogRef<UserAddFormComponent>)
 	{
@@ -37,7 +38,8 @@ export class UserAddFormComponent implements OnInit {
 			email: [null, [Validators.required, Validators.email]],
 			password: [null, [Validators.required]],
 			confirmPassword: [null, [Validators.required]],
-			type: [UserTypes.client, [Validators.required]]
+			type: [UserTypes.client, [Validators.required]],
+			companyId: [null]
 		}, { validators: [Validation.match('password', 'confirmPassword')]});
 	}
 
@@ -51,19 +53,23 @@ export class UserAddFormComponent implements OnInit {
 
 	getUser(): void {
 		this.apiService.get(`users/${this.userId}`).subscribe({
-			next: (resp: GenericApiResponse) => {
-				let usersData = { ...resp.data['user'] };
-
-				if (resp.data['user'].type !== UserTypes.client) {
-					this.onUserTypeChange({ value: resp.data['user'].type, source: null } );
-					usersData = { ...resp.data['user'], ...resp.data['user']['company'] };
-					this.theForm.get('companyName').patchValue(resp.data['user']['company'].name);
-				}
-
-				this.theForm.patchValue(usersData);
-			},
+			next: (resp: GenericApiResponse) => this.handleGetUserResp(resp.data['user']),
 			error: (error: any) => this.toastr.error(error)
 		});
+	}
+
+	handleGetUserResp(user: User): void {
+		let usersData = user;
+
+		if (user.type !== UserTypes.client) {
+			this.onUserTypeChange({ value: user.type, source: null } );
+			usersData = { ...user, ...user.company };
+			usersData.name = user.name;
+			this.theForm.get('companyName').patchValue(user.company.name);
+		}
+
+		this.theForm.patchValue(usersData);
+		this.user = user;
 	}
 
 	numericOnly(ev: KeyboardEvent): boolean {
@@ -71,12 +77,18 @@ export class UserAddFormComponent implements OnInit {
 	}
 
 	onUserTypeChange(ev: MatSelectChange): void {
-		if (ev.value !== 'Client') {
+		if (ev.value !== UserTypes.client) {
 			this.theForm.addControl('companyName', new FormControl('', Validators.required));
 			this.theForm.addControl('commercialRegNumber', new FormControl('', Validators.required));
 			this.theForm.addControl('address', new FormControl('', Validators.required));
 			this.theForm.addControl('totalEmployees', new FormControl('', Validators.required));
 			this.theForm.addControl('documents', new FormControl(''));
+
+			if (this.user) {
+				this.theForm.patchValue(this.user.company);
+				this.theForm.get('companyName').patchValue(this.user.company.name);
+				this.theForm.get('name').patchValue(this.user.name);
+			}
 		}
 		else {
 			this.theForm.removeControl('companyName');
@@ -92,6 +104,10 @@ export class UserAddFormComponent implements OnInit {
 		payload.fromAdmin = true;
 		payload.confirmPassword = undefined;
 		this.disableSaveBtn = true;
+
+		if (payload.type === UserTypes.client) {
+			payload.companyId = null;
+		}
 
 		if (this.userId) {
 			this.apiService.patch(`users/${this.userId}`, payload).subscribe({
