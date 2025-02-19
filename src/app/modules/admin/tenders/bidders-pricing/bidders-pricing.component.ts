@@ -1,15 +1,23 @@
+import { CommonModule } from '@angular/common';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatTableModule } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { ApiService } from 'app/api.service';
 import { GenericApiResponse, Tender } from 'app/models';
+import { ReplaceUnderscorePipe } from 'app/shared/pipes/replace-underscore.pipe';
 import { ToastrService } from 'ngx-toastr';
 
 
 @Component({
   selector: 'bidder-pricing',
   templateUrl: './bidders-pricing.component.html',
-  styleUrls: ['./bidders-pricing.component.scss']
+  styleUrls: ['./bidders-pricing.component.scss'],
+  standalone: true,
+  imports: [CommonModule, MatTableModule, MatProgressBarModule, MatCardModule, MatIconModule, ReplaceUnderscorePipe]
 })
 export class BiddersPricingComponent implements OnInit {
 	tenderId: number;
@@ -23,7 +31,7 @@ export class BiddersPricingComponent implements OnInit {
 
 	constructor(private apiService: ApiService,
 				private toastr: ToastrService,
-				private route: ActivatedRoute,
+				route: ActivatedRoute,
 				private router: Router,
 				private cdr: ChangeDetectorRef,
 				private confirmationService: FuseConfirmationService)

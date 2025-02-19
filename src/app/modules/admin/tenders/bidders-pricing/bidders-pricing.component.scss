@@ -48,11 +48,28 @@
 	
 				td {
 					max-width: 20rem;
+					width: 10rem;
 				}
 			}
 	
 			.selected {
 				background-color: #a3a3a3 !important;
+			}
+
+			.bid-status {
+				width: 7rem;
+				padding: 2px 6px;
+				color: #fff;
+				border-radius: 8px;
+				text-align: center;
+			}
+
+			.in_range {
+				background-color: #28a745;
+			}
+
+			.out_of_range {
+				background-color: #dc3545;
 			}
 		}
 

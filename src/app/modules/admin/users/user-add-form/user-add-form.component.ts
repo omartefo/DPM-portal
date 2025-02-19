@@ -118,8 +118,6 @@ export class UserAddFormComponent implements OnInit {
 				this.toastr.error(error);
 			}
 		});
-
-		console.log(this.user.canParticipateInTenders);
 	}
 
 	onSave(): void {
