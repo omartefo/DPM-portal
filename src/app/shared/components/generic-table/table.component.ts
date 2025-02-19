@@ -1,22 +1,17 @@
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild, ChangeDetectorRef } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
-import { FileSaverService } from 'ngx-filesaver';
 import JSZip from 'jszip';
+import { FileSaverService } from 'ngx-filesaver';
 import { ToastrService } from 'ngx-toastr';
-
-// Services
-import { ApiService } from 'app/api.service';
+import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
+import { ApiService } from 'app/api.service';
 import { UserService } from 'app/core/user/user.service';
-
-// Models
-import { TableAction, TableConfig, TableRowAction, TableSignal } from './models';
 import { GenericApiResponse, User } from 'app/models';
-import { WhereData } from './models';
+import { TableAction, TableConfig, TableRowAction, TableSignal, WhereData } from './models';
 
 
 @Component({
@@ -125,16 +120,8 @@ export class TableComponent implements OnInit {
 	onAPIResponse(resp: GenericApiResponse): void {
 		this.loading = false;
 		this.dataError = false;
-		const respData = resp.data[this.config.slug];
-
-		if (respData.hasOwnProperty('count')) {
-			this.dataSource = respData.rows;
-			this.totalRecords = respData.count;
-		}
-		else {
-			this.dataSource = respData;
-			this.totalRecords = respData.length;
-		}
+		this.dataSource = resp.data[this.config.slug].rows;
+		this.totalRecords = resp.data[this.config.slug].count;
 
 		if (this.totalRecords === 0)
 		{

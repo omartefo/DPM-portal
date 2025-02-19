@@ -5,7 +5,6 @@ export type UserType = 'Client' | 'Supplier' | 'Contractor' | 'Consultant' | 'Su
 export interface GenericApiResponse {
 	status: 'success' | 'failed';
 	data: any;
-	totalRecords?: number;
 };
 
 export interface User {
