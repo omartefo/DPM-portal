@@ -92,10 +92,12 @@
 	}
 
 	.item {
-		background: #cdc9c9;
+		border: 1px solid #e9e1e1;
+		background: #f6f6f6;
 		padding: 2px 7px;
 		border-radius: 10px;
-		margin-right: 5px;
+		margin: 2px 6px 4px 0;
+		display: inline-block;
 	}
 
 	.underlined {
