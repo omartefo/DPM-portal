@@ -21,6 +21,7 @@ export class UserAddFormComponent implements OnInit {
 	user: User;
 	theForm: FormGroup;
 	disableSaveBtn = false;
+	disableCanParticipateInTendersBtn = false;
 	mobileNumberLength: number = UserConfig.mobileNumberLength;
 
 	constructor(private apiService: ApiService,
@@ -99,14 +100,39 @@ export class UserAddFormComponent implements OnInit {
 		}
 	}
 
+	toggleTenderParticipation(): void {
+		this.disableCanParticipateInTendersBtn = true;
+		const payload = {
+			canParticipateInTenders: !this.user.canParticipateInTenders
+		};
+
+		this.apiService.patch(`users/${this.userId}/toggleTenderParticipation`, payload).subscribe({
+			next: (resp: GenericApiResponse) => {
+				this.disableCanParticipateInTendersBtn = false;
+				this.user.canParticipateInTenders = resp.data.canParticipateInTenders;
+				const message = resp.data.canParticipateInTenders ? 'Participation ENABLED' : 'Participation DISABLED';
+				this.toastr.success(message, 'Contractor Tender Participation');
+			},
+			error: (error: any) => {
+				this.disableCanParticipateInTendersBtn = false;
+				this.toastr.error(error);
+			}
+		});
+
+		console.log(this.user.canParticipateInTenders);
+	}
+
 	onSave(): void {
 		const payload = this.theForm.value;
 		payload.fromAdmin = true;
 		payload.confirmPassword = undefined;
 		this.disableSaveBtn = true;
 
-		if (payload.type === UserTypes.client) {
+		if (this.userId && payload.type === UserTypes.client) {
 			payload.companyId = null;
+		}
+		else {
+			delete payload.companyId;
 		}
 
 		if (this.userId) {

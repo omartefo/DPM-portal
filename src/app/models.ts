@@ -17,6 +17,7 @@ export interface User {
 	company?: UserCompany;
 	avatar?: string;
 	isAccountActive?: boolean;
+	canParticipateInTenders?: boolean;
 }
 
 export interface UserCompany {

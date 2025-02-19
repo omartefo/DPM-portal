@@ -108,6 +108,13 @@
 	<mat-divider class="divider"></mat-divider>
 
 	<div class="flex justify-end">
+		<button *ngIf="user && user.type === 'Contractor'" mat-raised-button
+			[disabled]="disableCanParticipateInTendersBtn"
+			[color]="user.canParticipateInTenders ? 'warn' : 'primary'" class="mr-4"
+			(click)="toggleTenderParticipation()">
+			{{ user.canParticipateInTenders ? 'Disable Tender Participation' : 'Allow Tender Participation' }}
+		</button>
+
 		<button mat-raised-button color="primary" 
 			[disabled]="theForm.invalid || !theForm.dirty || disableSaveBtn" 
 			(click)="onSave()">{{ userId ? 'Update' : 'Save' }}
