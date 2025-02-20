@@ -287,4 +287,14 @@ export class TableComponent implements OnInit {
 		this.page = ev.pageIndex + 1;
 		this.loadData();
 	}
+
+	normalizeClass(value: string): string {
+		if (!value) {
+			return '';
+		}
+
+		return value
+			.toLowerCase()
+			.replace(/[\s_]+/g, '-');  // Replace spaces and underscores with hyphens
+	}
 }

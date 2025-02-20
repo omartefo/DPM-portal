@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { TableConfig, TableAction, TableSignal } from 'app/shared/components/generic-table/models';
+import { TableAction, TableConfig, TableSignal } from 'app/shared/components/generic-table/models';
 import { Subject } from 'rxjs';
 
 
@@ -37,7 +37,7 @@ export class BidsComponent {
 				{ name: 'durationInNumbers', title: 'Duration In Numbers' },
 				{ name: 'priceInLetters', title: 'Price In Letters' },
 				{ name: 'priceInNumbers', title: 'Price In Numbers' },
-				{ name: 'status', title: 'Status' },
+				{ name: 'status', title: 'Status', applyStatusClass: true, width: '9rem' },
 
 				{ name: 'createdAt', title: 'Date Created', format: 'datetime' },
 			]

@@ -89,13 +89,20 @@
 	
 										<ng-template #singleValue>
 											<div [style.width]="col.width" *ngIf="col.applyStatusClass; else simpleCol" 
-												[class.status]="col.applyStatusClass" [class]="row[col.name].toLowerCase().replace(' ', '_')">
-												{{ row[col.name] | nestedValue:col.name:row | format:col.format }}
+												[class.status]="col.applyStatusClass" [class]="normalizeClass(row[col.name])">
+												{{ row[col.name] 
+													| nestedValue:col.name:row 
+													| formatDisplayValue
+													| format:col.format 
+												}}
 											</div>
 
 											<ng-template #simpleCol>
 												<div [style.width]="col.width">
-													{{ row[col.name] | nestedValue:col.name:row | format:col.format }}
+													{{ row[col.name] 
+														| nestedValue:col.name:row 
+														| format:col.format 
+													}}
 												</div>
 											</ng-template>
 										</ng-template>

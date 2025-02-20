@@ -1,9 +1,10 @@
-import { CommonModule, DecimalPipe, DatePipe} from '@angular/common';
+import { CommonModule, DatePipe, DecimalPipe } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MaterialModule } from 'app/modules/material/material.module';
 
-import { FormatDataPipe } from '../generic-table/format.pipe';
+import { FormatDisplayValue } from 'app/shared/pipes/format-display-value.pipe';
+import { FormatDataPipe } from '../../pipes/format.pipe';
 import { TableComponent } from '../generic-table/table.component';
 import { NestedValuePipe } from './nestedValue.pipe';
 
@@ -19,7 +20,8 @@ import { NestedValuePipe } from './nestedValue.pipe';
 		TableComponent,
 
         FormatDataPipe,
-		NestedValuePipe
+		NestedValuePipe,
+		FormatDisplayValue
 	],
 	exports: [
 		TableComponent,
