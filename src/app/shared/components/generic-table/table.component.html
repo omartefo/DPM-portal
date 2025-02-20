@@ -37,11 +37,30 @@
 				<table mat-table [dataSource]="dataSource" matSort (matSortChange)="onSortChange($event)">
 					<ng-container *ngFor="let col of config.columns">
 						<ng-container [matColumnDef]="col.name">
-							<ng-container *ngIf="col.sortable; else nonSortableHeader">
+							<ng-container *ngIf="col.sortable;">
 								<th mat-header-cell *matHeaderCellDef mat-sort-header> {{col.title}} </th>
 							</ng-container>
 			
-							<ng-template #nonSortableHeader>
+							<ng-container *ngIf="col.filter; else otherHeadings">
+								<th mat-header-cell *matHeaderCellDef>
+									<span class="relative">
+										<span class="mr-4">{{col.title}}</span>
+
+										<mat-icon (click)="col.toggleFilter = !col.toggleFilter" 
+												class="filter-icon"
+												color="primary">
+											{{ col.filterConfig.selectedFilterValue ? 'filter_alt' : 'filter_list' }}
+										</mat-icon>
+									</span>
+
+									<table-filters *ngIf="col.toggleFilter"
+										[config]="col.filterConfig"
+										(signal)="onTableFilter($event, col)">
+									</table-filters>
+								</th>
+							</ng-container>
+
+							<ng-template #otherHeadings>
 								<th mat-header-cell *matHeaderCellDef> {{col.title}} </th>
 							</ng-template>
 

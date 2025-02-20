@@ -141,6 +141,13 @@
 			background-color: #dc3545;
 		}
 	}
+
+	.filter-icon {
+		position: absolute;
+		top: -8px;
+		right: -10px;
+		cursor: pointer;
+	}
 }
 
 ::ng-deep .mat-sort-header-stem {

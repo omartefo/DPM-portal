@@ -5,6 +5,7 @@ import { MaterialModule } from 'app/modules/material/material.module';
 
 import { FormatDisplayValue } from 'app/shared/pipes/format-display-value.pipe';
 import { FormatDataPipe } from '../../pipes/format.pipe';
+import { TableFiltersComponent } from '../filters/filters.component';
 import { TableComponent } from '../generic-table/table.component';
 import { NestedValuePipe } from './nestedValue.pipe';
 
@@ -18,6 +19,7 @@ import { NestedValuePipe } from './nestedValue.pipe';
 	],
 	declarations: [
 		TableComponent,
+		TableFiltersComponent,
 
         FormatDataPipe,
 		NestedValuePipe,

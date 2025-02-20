@@ -9,6 +9,6 @@ export class NestedValuePipe implements PipeTransform {
 			return value;
 		}
 
-        return col.split('.').reduce((acc, key) => (acc && acc[key] !== undefined ? acc[key] : 'NA'), row);
+        return col.split('.').reduce((acc, key) => (acc && acc[key] !== undefined ? acc[key] : null), row);
     }
 }

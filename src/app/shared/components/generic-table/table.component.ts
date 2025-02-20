@@ -3,15 +3,15 @@ import { FormControl } from '@angular/forms';
 import { PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import JSZip from 'jszip';
-import { FileSaverService } from 'ngx-filesaver';
-import { ToastrService } from 'ngx-toastr';
-import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { ApiService } from 'app/api.service';
 import { UserService } from 'app/core/user/user.service';
 import { GenericApiResponse, User } from 'app/models';
-import { TableAction, TableConfig, TableRowAction, TableSignal, WhereData } from './models';
+import JSZip from 'jszip';
+import { FileSaverService } from 'ngx-filesaver';
+import { ToastrService } from 'ngx-toastr';
+import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
+import { TableAction, TableColumn, TableConfig, TableRowAction, TableSignal, WhereData } from './models';
 
 
 @Component({
@@ -296,5 +296,20 @@ export class TableComponent implements OnInit {
 		return value
 			.toLowerCase()
 			.replace(/[\s_]+/g, '-');  // Replace spaces and underscores with hyphens
+	}
+
+	onTableFilter(ev: any, col: TableColumn): void {
+		const search = ev.value ? ev.value[0] : '';
+
+		col.toggleFilter = false;
+		col.filterConfig.selectedFilterValue = search;
+
+		this.config.where = {
+			column: col.filterConfig.whereCol,
+			op: 'eq',
+			search
+		};
+
+		this.loadData();
 	}
 }
