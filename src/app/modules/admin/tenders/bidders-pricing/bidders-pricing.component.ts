@@ -33,7 +33,7 @@ export class BiddersPricingComponent implements OnInit {
 				private cdr: ChangeDetectorRef,
 				private confirmationService: FuseConfirmationService)
 	{
-		this.displayedColumns = ['company', 'duration', 'price', 'status'];
+		this.displayedColumns = ['company', 'duration', 'price', 'status', 'dummy_column_take_space'];
 		this.tenderId = +route.snapshot.paramMap.get('tenderId');
 	}
 

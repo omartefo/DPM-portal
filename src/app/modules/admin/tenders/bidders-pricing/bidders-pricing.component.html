@@ -46,6 +46,11 @@
 								</div>
 							</td>
 						</ng-container>
+
+						<ng-container matColumnDef="dummy_column_take_space">
+							<th mat-header-cell *matHeaderCellDef></th>
+							<td mat-cell *matCellDef="let element"></td>
+						</ng-container>
 	
 						<ng-container matColumnDef="loading">
 							<th mat-header-cell *matHeaderCellDef colspan="100%" style="border-bottom-width: 0; padding: 0;" >
