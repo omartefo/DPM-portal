@@ -57,8 +57,7 @@ export class TableComponent implements OnInit {
 
 		this.actions.subscribe((ac: TableAction) => {
 			if (ac.type === 'reload') {
-				this.selectedRow = null;
-				this.loadData();
+				this.onRefreshData();
 			}
 		});
 
