@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -6,6 +7,7 @@ import { ApiService } from 'app/api.service';
 import { GenericApiResponse, Tender } from 'app/models';
 import { MaterialModule } from 'app/modules/material/material.module';
 import { ReplaceUnderscorePipe } from 'app/shared/pipes/replace-underscore.pipe';
+import { ExportService } from 'app/shared/services/xlsx.service';
 import { ToastrService } from 'ngx-toastr';
 
 
@@ -22,6 +24,7 @@ export class BiddersPricingComponent implements OnInit {
 	dataSource: any;
 	selectedRow: any;
 	displayedColumns: string[] = [];
+	logoURL: string = '../../../../../assets/images/binaa_logo.png';
 
 	loading = false;
 	dataError = false;
@@ -31,9 +34,10 @@ export class BiddersPricingComponent implements OnInit {
 				route: ActivatedRoute,
 				private router: Router,
 				private cdr: ChangeDetectorRef,
-				private confirmationService: FuseConfirmationService)
+				private confirmationService: FuseConfirmationService,
+				private exportService: ExportService)
 	{
-		this.displayedColumns = ['company', 'duration', 'price', 'status', 'dummy_column_take_space'];
+		this.displayedColumns = ['company', 'duration', 'price', 'isVerifiedOnBinaa', 'status', 'dummy_column_take_space'];
 		this.tenderId = +route.snapshot.paramMap.get('tenderId');
 	}
 
@@ -113,4 +117,28 @@ export class BiddersPricingComponent implements OnInit {
 
 		this.selectedRow = row;
 	}
+
+	exportToExcel(): void {
+		const simplifiedData = this.dataSource.map(element => ({
+			'Company': element.user?.company?.name || '',
+			'Duration': element.durationInNumbers || '',
+			'Price': element.priceInNumbers || '',
+			'Binaa Verified': element.user?.company?.isVerifiedOnBinaa ? 'Yes' : 'No',
+			'Status': this.formatStatus(element.status)
+		}));
+
+		this.exportService.exportAsExcelFile(simplifiedData, 'Bids');
+	}
+
+	formatStatus(status: string): string {
+		if (!status) {
+			return '';
+		};
+
+		return status
+			.toLowerCase()
+			.split('_')
+			.map(word => word.charAt(0).toUpperCase() + word.slice(1))
+			.join(' ');
+		}
 }
