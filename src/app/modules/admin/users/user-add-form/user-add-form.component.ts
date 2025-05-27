@@ -84,6 +84,7 @@ export class UserAddFormComponent implements OnInit {
 			this.theForm.addControl('address', new FormControl('', Validators.required));
 			this.theForm.addControl('totalEmployees', new FormControl('', Validators.required));
 			this.theForm.addControl('documents', new FormControl(''));
+			this.theForm.addControl('isVerifiedOnBinaa', new FormControl(false));
 
 			if (this.user) {
 				this.theForm.patchValue(this.user.company);
