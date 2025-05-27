@@ -26,6 +26,10 @@ export interface TableColumn {
 	columnName?: string;
 	applyStatusClass?: boolean;
 	width?: string;
+
+	filter?: boolean;
+	toggleFilter?: boolean;
+	filterConfig?: TableFilterConfig;
 }
 
 export interface WhereData {
@@ -51,4 +55,10 @@ export interface TableSignal {
 
 export interface TableAction {
 	type: 'reload';
+}
+
+export interface TableFilterConfig {
+	options: string[];
+	whereCol: string;
+	selectedFilterValue?: string;
 }

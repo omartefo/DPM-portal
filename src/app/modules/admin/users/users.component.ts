@@ -47,6 +47,10 @@ export class UsersComponent {
 		}
 	}
 
+	getUserGroupTypes(): string[] {
+		return [UserTypes.client, UserTypes.consultant, UserTypes.contractor, UserTypes.supplier];
+	}
+
 	private initConfig(): void {
 		this.tableConfig = {
 			title: 'Users',
@@ -78,7 +82,13 @@ export class UsersComponent {
 				{ name: 'email', title: 'Email' },
 				{ name: 'mobileNumber', title: 'Mobile Number' },
 				{ name: 'isAccountActive', title: 'Is Account Active', format: 'boolean' },
-				{ name: 'type', title: 'Group Type' },
+				{
+					name: 'type', title: 'Group Type', filter: true,
+					filterConfig: {
+						options: this.getUserGroupTypes(),
+						whereCol: 'type'
+					}
+				},
 				{ name: 'company.name', title: 'Company' },
 				{ name: 'createdAt', title: 'Date Created', format: 'datetime' },
 			]

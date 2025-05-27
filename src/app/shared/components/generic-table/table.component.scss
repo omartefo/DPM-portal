@@ -123,13 +123,30 @@
 			background-color: #A5C7E7;
 		}
 
-		&.under_evaluation {
+		&.under-evaluation {
 			background-color: #FFEB99;
 		}
 
 		&.open {
 			background-color: #A8D5BA;
 		}
+
+		&.in-range {
+			color: #fff;
+			background-color: #28a745;
+		}
+
+		&.out-of-range {
+			color: #fff;
+			background-color: #dc3545;
+		}
+	}
+
+	.filter-icon {
+		position: absolute;
+		top: -8px;
+		right: -10px;
+		cursor: pointer;
 	}
 }
 

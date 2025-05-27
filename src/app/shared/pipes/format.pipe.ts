@@ -1,6 +1,6 @@
 import { DatePipe, DecimalPipe } from '@angular/common';
 import { Pipe, PipeTransform } from '@angular/core';
-import { TableFormat } from './models';
+import { TableFormat } from '../components/generic-table/models';
 
 @Pipe({
     name: 'format'
