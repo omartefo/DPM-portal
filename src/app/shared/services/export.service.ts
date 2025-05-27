@@ -1,4 +1,4 @@
-// export.service.ts
+/* eslint-disable @typescript-eslint/naming-convention */
 import * as XLSX from 'xlsx';
 import { Injectable } from '@angular/core';
 import * as FileSaver from 'file-saver';

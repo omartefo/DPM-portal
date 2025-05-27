@@ -7,7 +7,7 @@ import { ApiService } from 'app/api.service';
 import { GenericApiResponse, Tender } from 'app/models';
 import { MaterialModule } from 'app/modules/material/material.module';
 import { ReplaceUnderscorePipe } from 'app/shared/pipes/replace-underscore.pipe';
-import { ExportService } from 'app/shared/services/xlsx.service';
+import { ExportService } from 'app/shared/services/export.service';
 import { ToastrService } from 'ngx-toastr';
 
 
