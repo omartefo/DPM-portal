@@ -24,7 +24,6 @@ export class BiddersPricingComponent implements OnInit {
 	dataSource: any;
 	selectedRow: any;
 	displayedColumns: string[] = [];
-	logoURL: string = '../../../../../assets/images/binaa_logo.png';
 
 	loading = false;
 	dataError = false;

@@ -44,7 +44,7 @@
 
 						<ng-container matColumnDef="isVerifiedOnBinaa">
 							<th mat-header-cell *matHeaderCellDef> Binaa Verified</th>
-							<td mat-cell *matCellDef="let element"> <img [src]="logoURL" alt="" *ngIf="element?.user?.company?.isVerifiedOnBinaa"> </td>
+							<td mat-cell *matCellDef="let element"> <img [src]="'/assets/images/binaa_logo.png'" alt="Binaa Verified" *ngIf="element?.user?.company?.isVerifiedOnBinaa"> </td>
 						</ng-container>
 	
 						<ng-container matColumnDef="status">
