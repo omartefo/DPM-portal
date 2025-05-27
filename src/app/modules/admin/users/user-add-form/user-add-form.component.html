@@ -52,6 +52,13 @@
 		</mat-form-field>
 
 		<div class="flex flex-col" *ngIf="theForm.get('type')?.value !== 'Client'">
+			
+			<div class="flex justify-end mb-2">
+				<mat-checkbox formControlName="isVerifiedOnBinaa">
+					Verified on Binaa
+				</mat-checkbox>
+			</div>
+
 			<mat-form-field appearance="outline">
 				<mat-label>Company Name</mat-label>
 				<input matInput placeholder="Company Name" formControlName="companyName">
@@ -83,6 +90,8 @@
 					<div *ngIf="theForm.controls['totalEmployees'].hasError('required')">Total Employees is required.</div>
 				</mat-error>
 			</mat-form-field>
+
+
 		</div>
 
 		<div class="flex flex-col" *ngIf="!userId">
