@@ -33,13 +33,13 @@
 						</ng-container>
 	
 						<ng-container matColumnDef="duration">
-							<th mat-header-cell *matHeaderCellDef> Duration (months) </th>
-							<td mat-cell *matCellDef="let element"> {{element.durationInNumbers }} </td>
+							<th mat-header-cell *matHeaderCellDef style="width: 80px;"> Duration (months) </th>
+							<td mat-cell *matCellDef="let element" style="width: 80px;"> {{element.durationInNumbers }} </td>
 						</ng-container>
 	
 						<ng-container matColumnDef="price">
-							<th mat-header-cell *matHeaderCellDef> Price </th>
-							<td mat-cell *matCellDef="let element"> {{element.priceInNumbers }} </td>
+							<th mat-header-cell *matHeaderCellDef style="width: 80px;"> Price </th>
+							<td mat-cell *matCellDef="let element" style="width: 80px;"> {{element.priceInNumbers }} </td>
 						</ng-container>
 
 						<ng-container matColumnDef="isVerifiedOnBinaa">
@@ -48,8 +48,8 @@
 						</ng-container>
 	
 						<ng-container matColumnDef="status">
-							<th mat-header-cell *matHeaderCellDef> Status </th>
-							<td mat-cell *matCellDef="let element">
+							<th mat-header-cell *matHeaderCellDef style="width: 80px;"> Status </th>
+							<td mat-cell *matCellDef="let element" style="width: 80px;">
 								<div class="bid-status" [class]="element.status.toLowerCase()">
 									{{element.status | replaceUnderscore }}
 								</div>
