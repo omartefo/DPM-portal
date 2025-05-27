@@ -22,6 +22,7 @@ export class BiddersPricingComponent implements OnInit {
 	dataSource: any;
 	selectedRow: any;
 	displayedColumns: string[] = [];
+	logoURL: string = '../../../../../assets/images/binaa_logo.png';
 
 	loading = false;
 	dataError = false;
@@ -33,7 +34,7 @@ export class BiddersPricingComponent implements OnInit {
 				private cdr: ChangeDetectorRef,
 				private confirmationService: FuseConfirmationService)
 	{
-		this.displayedColumns = ['company', 'duration', 'price', 'status'];
+		this.displayedColumns = ['company', 'duration', 'price', 'isVerifiedOnBinaa', 'status'];
 		this.tenderId = +route.snapshot.paramMap.get('tenderId');
 	}
 
