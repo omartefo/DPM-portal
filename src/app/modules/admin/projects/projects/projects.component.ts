@@ -1,14 +1,13 @@
-import { ToastrService } from 'ngx-toastr';
-import { MatDialog } from '@angular/material/dialog';
 import { Component } from '@angular/core';
-import { Subject } from 'rxjs';
-import { TableConfig, TableAction, TableSignal } from 'app/shared/components/generic-table/models';
+import { MatDialog } from '@angular/material/dialog';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { ApiService } from 'app/api.service';
-import { GenericApiResponse } from 'app/models';
-import { AddProjectFormComponent } from '../project-form/project-form.component';
+import { GenericApiResponse, Project } from 'app/models';
+import { TableAction, TableConfig, TableSignal } from 'app/shared/components/generic-table/models';
+import { ToastrService } from 'ngx-toastr';
+import { Subject } from 'rxjs';
 import { AddTenderFormComponent } from '../../tenders/tender-form/tender-form.component';
-import { Project } from './../../../../models';
+import { AddProjectFormComponent } from '../project-form/project-form.component';
 
 
 @Component({

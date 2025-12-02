@@ -1,9 +1,9 @@
-import { ToastrService } from 'ngx-toastr';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { ApiService } from 'app/api.service';
-import { GenericApiResponse } from '../../../../models';
+import { GenericApiResponse, User } from 'app/models';
+import { ToastrService } from 'ngx-toastr';
 
 
 @Component({
@@ -13,9 +13,7 @@ import { GenericApiResponse } from '../../../../models';
 })
 export class AddProjectFormComponent implements OnInit {
 	projectTypes: string[] = ['Villa', 'Commercial Building', 'Industrial Project'];
-	projectLocations: string[] = ['Doha', 'Al Rayyan', 'Umm Salal',
-		'Al Khor & Al Thakira', 'Al Wakrah', 'Al Daayen', 'Al Shamal, and Al Shahaniya'];
-	clients: any[] = [];
+	clients: User[] = [];
 	id: number;
 	theForm: FormGroup;
 	disableSaveBtn = false;
@@ -25,7 +23,7 @@ export class AddProjectFormComponent implements OnInit {
 				private toastr: ToastrService,
 				private dialogRef: MatDialogRef<AddProjectFormComponent>)
 	{
-		this.theForm = fb.group({
+		this.theForm = this.fb.group({
 			name: ['', Validators.required],
 			location: ['', Validators.required],
 			type: ['', Validators.required],
@@ -40,22 +38,6 @@ export class AddProjectFormComponent implements OnInit {
 		if (this.id) {
 			this.getProject();
 		}
-	}
-
-	getAllClients(): void {
-		this.apiService.get('users?type=Client&limit=all').subscribe({
-			next: (resp: GenericApiResponse) => this.clients = resp.data['users'].rows,
-			error: (error: any) => this.toastr.error(error)
-		});
-	}
-
-	getProject(): void {
-		this.apiService.get(`projects/${this.id}`).subscribe({
-			next: (resp: GenericApiResponse) => {
-				this.theForm.patchValue(resp.data['project']);
-			},
-			error: (error: any) => this.toastr.error(error)
-		});
 	}
 
 	onSave(): void {
@@ -86,5 +68,21 @@ export class AddProjectFormComponent implements OnInit {
 				}
 			});
 		}
+	}
+
+	private getAllClients(): void {
+		this.apiService.get('users?type=Client&limit=all').subscribe({
+			next: (resp: GenericApiResponse) => this.clients = resp.data['users'].rows,
+			error: (error: any) => this.toastr.error(error)
+		});
+	}
+
+	private getProject(): void {
+		this.apiService.get(`projects/${this.id}`).subscribe({
+			next: (resp: GenericApiResponse) => {
+				this.theForm.patchValue(resp.data['project']);
+			},
+			error: (error: any) => this.toastr.error(error)
+		});
 	}
 }

@@ -19,7 +19,8 @@
         ],
 		"paths": {
 			"@shared/*": ["./src/app/shared/*"],
-			"@common/*": ["./src/app/layout/common/*"]
+			"@common/*": ["./src/app/layout/common/*"],
+            "@models/*": ["./src/app/models/*"]
 		}
     },
     "angularCompilerOptions": {
