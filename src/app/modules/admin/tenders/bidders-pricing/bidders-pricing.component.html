@@ -42,6 +42,11 @@
 							<td mat-cell *matCellDef="let element"> {{element.priceInNumbers }} </td>
 						</ng-container>
 
+						<ng-container matColumnDef="stage">
+							<th mat-header-cell *matHeaderCellDef> Stage </th>
+							<td mat-cell *matCellDef="let element"> {{element.stage }} </td>
+						</ng-container>
+
 						<ng-container matColumnDef="isVerifiedOnBinaa">
 							<th mat-header-cell *matHeaderCellDef> Binaa Verified</th>
 							<td mat-cell *matCellDef="let element"> <img [src]="'/assets/images/binaa_logo.png'" alt="Binaa Verified" *ngIf="element?.user?.company?.isVerifiedOnBinaa"> </td>

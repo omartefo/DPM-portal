@@ -36,7 +36,7 @@ export class BiddersPricingComponent implements OnInit {
 				private confirmationService: FuseConfirmationService,
 				private exportService: ExportService)
 	{
-		this.displayedColumns = ['company', 'duration', 'price', 'isVerifiedOnBinaa', 'status', 'dummy_column_take_space'];
+		this.displayedColumns = ['company', 'duration', 'price', 'stage', 'isVerifiedOnBinaa', 'status', 'dummy_column_take_space'];
 		this.tenderId = +route.snapshot.paramMap.get('tenderId');
 	}
 
