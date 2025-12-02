@@ -139,5 +139,19 @@ export class BiddersPricingComponent implements OnInit {
 			.split('_')
 			.map(word => word.charAt(0).toUpperCase() + word.slice(1))
 			.join(' ');
-		}
+	}
+
+	onStageChange(bid: any, stage: string | null): void {
+		const payload = { stage };
+
+		this.apiService.patch(`bids/${bid.biddingId}/stage`, payload).subscribe({
+			next: () => {
+				bid.stage = stage;
+				this.toastr.success('Stage updated successfully');
+			},
+			error: (error: any) => {
+				this.toastr.error(error);
+			}
+		});
+	}
 }

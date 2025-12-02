@@ -84,10 +84,10 @@
 			border-radius: 4px;
 		}
 	
-		.search-field {
+		.stage-dropdown {
 			::ng-deep .mat-form-field-wrapper {
 				padding-bottom: 0 !important;
-				margin: 0;
+				margin: 8px 0;
 			}
 		}
 	}
