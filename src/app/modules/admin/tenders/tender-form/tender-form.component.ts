@@ -3,13 +3,12 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { ApiService } from 'app/api.service';
-import { GenericApiResponse, TenderDocumentSignal } from 'app/models';
+import { GenericApiResponse, Project, TenderDocumentSignal } from 'app/models';
 import { MaterialModule } from 'app/modules/material/material.module';
 import Validation from 'app/shared/validators';
 import moment from 'moment';
 import { NgxMatTimepickerModule } from 'ngx-mat-timepicker';
 import { ToastrService } from 'ngx-toastr';
-import { Project } from '../../../../models';
 import { TenderDocumentComponent } from './tender-document/tender-document.component';
 
 
@@ -22,9 +21,6 @@ import { TenderDocumentComponent } from './tender-document/tender-document.compo
 })
 export class AddTenderFormComponent implements OnInit
 {
-	projectLocations: string[] = ['Doha', 'Al Rayyan', 'Umm Salal',
-		'Al Khor & Al Thakira', 'Al Wakrah', 'Al Daayen', 'Al Shamal, and Al Shahaniya'];
-
 	tenderId: number;
 	projectId: number;
 	theForm: FormGroup;
@@ -42,20 +38,7 @@ export class AddTenderFormComponent implements OnInit
 				private toastr: ToastrService,
 				private dialogRef: MatDialogRef<AddTenderFormComponent>)
 	{
-		this.theForm = fb.group({
-			tenderNumber: ['', Validators.required],
-			type: ['', Validators.required],
-			openingDate: [this.currentDate, Validators.required],
-			closingDate: [this.currentDate, Validators.required],
-			minimumPrice: [, [Validators.required, Validators.min(1)]],
-			maximumPrice: [, Validators.required],
-			location: ['', Validators.required],
-			description: ['', Validators.required],
-			projectId: ['', Validators.required],
-			document1: [''],
-			document2: [''],
-			document3: ['']
-		},  { validator: Validation.priceRangeValidator('minimumPrice', 'maximumPrice') });
+		this.initForm();
 	}
 
 	ngOnInit(): void {
@@ -70,26 +53,6 @@ export class AddTenderFormComponent implements OnInit
 		if (this.tenderId) {
 			this.getTender();
 		}
-	}
-
-	getAllProjects(): void {
-		this.apiService.get('projects?isApproved=true&limit=all').subscribe({
-			next: (resp: GenericApiResponse) => this.projects = resp.data['projects'].rows,
-			error: (error: any) => this.toastr.error(error)
-		});
-	}
-
-	getTender(): void {
-		this.apiService.get(`tenders/${this.tenderId}`).subscribe({
-			next: (resp: GenericApiResponse) => {
-				this.theForm.patchValue(resp.data['tender']);
-				this.currentDate = this.theForm.get('openingDate').value;
-				this.openingTime = moment(this.theForm.get('openingDate').value).format('hh:mm A');
-				this.closingTime = moment(this.theForm.get('closingDate').value).format('hh:mm A');
-				this.getAllProjects();
-			},
-			error: (error: any) => this.toastr.error(error)
-		});
 	}
 
 	onOpeningDateChange(ev: any): void {
@@ -220,5 +183,42 @@ export class AddTenderFormComponent implements OnInit
 				}
 			});
 		}
+	}
+
+	private initForm(): void {
+		this.theForm = this.fb.group({
+			tenderNumber: ['', Validators.required],
+			type: ['', Validators.required],
+			openingDate: [this.currentDate, Validators.required],
+			closingDate: [this.currentDate, Validators.required],
+			minimumPrice: [, [Validators.required, Validators.min(1)]],
+			maximumPrice: [, Validators.required],
+			location: ['', Validators.required],
+			description: ['', Validators.required],
+			projectId: ['', Validators.required],
+			document1: [''],
+			document2: [''],
+			document3: ['']
+		},  { validator: Validation.priceRangeValidator('minimumPrice', 'maximumPrice') });
+	}
+
+	private getAllProjects(): void {
+		this.apiService.get('projects?isApproved=true&limit=all').subscribe({
+			next: (resp: GenericApiResponse) => this.projects = resp.data['projects'].rows,
+			error: (error: any) => this.toastr.error(error)
+		});
+	}
+
+	private getTender(): void {
+		this.apiService.get(`tenders/${this.tenderId}`).subscribe({
+			next: (resp: GenericApiResponse) => {
+				this.theForm.patchValue(resp.data['tender']);
+				this.currentDate = this.theForm.get('openingDate').value;
+				this.openingTime = moment(this.theForm.get('openingDate').value).format('hh:mm A');
+				this.closingTime = moment(this.theForm.get('closingDate').value).format('hh:mm A');
+				this.getAllProjects();
+			},
+			error: (error: any) => this.toastr.error(error)
+		});
 	}
 }

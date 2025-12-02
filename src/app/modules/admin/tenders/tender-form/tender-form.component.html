@@ -130,13 +130,9 @@
 	
 		<mat-form-field appearance="outline">
 			<mat-label>Location</mat-label>
-			<mat-select formControlName="location">
-				<mat-option [value]="loc" *ngFor="let loc of projectLocations;">
-					{{ loc }}
-				</mat-option>
-			</mat-select>
-			<mat-error *ngIf="theForm.controls['location'].hasError('required')">
-				Location is required.
+			<input matInput placeholder="Location" formControlName="location">
+			<mat-error *ngIf="theForm.controls['location'].errors">
+				<div *ngIf="theForm.controls['location'].hasError('required')">Location is required.</div>
 			</mat-error>
 		</mat-form-field>
 
