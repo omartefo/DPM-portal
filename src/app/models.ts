@@ -25,6 +25,7 @@ export interface UserCompany {
 	commercialRegNumber: string;
 	address: string;
 	totalEmployees: number;
+	isVerifiedOnBinaa?: boolean;
 }
 
 export interface Project {
@@ -62,4 +63,13 @@ export interface TenderDocumentSignal {
 	type: 'ResetDocument' | 'UploadDocument';
 	value: File;
 	key: 'document1' | 'document2' | 'document3';
+}
+
+export interface Bid {
+	biddingId: number;
+  durationInNumbers: string;
+  priceInNumbers: string;
+  stage: string | null;
+  status: string;
+  user: User;
 }

@@ -4,12 +4,18 @@ import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { ApiService } from 'app/api.service';
-import { GenericApiResponse, Tender } from 'app/models';
+import { Bid, GenericApiResponse, Tender } from 'app/models';
 import { MaterialModule } from 'app/modules/material/material.module';
 import { ReplaceUnderscorePipe } from 'app/shared/pipes/replace-underscore.pipe';
 import { ExportService } from 'app/shared/services/export.service';
 import { ToastrService } from 'ngx-toastr';
 
+interface ErrorRow {
+  title: string;
+  message: string;
+}
+
+type BidTableRow = Bid | ErrorRow;
 
 @Component({
   selector: 'bidder-pricing',
@@ -21,8 +27,8 @@ import { ToastrService } from 'ngx-toastr';
 export class BiddersPricingComponent implements OnInit {
 	tenderId: number;
 	tender: Tender;
-	dataSource: any;
-	selectedRow: any;
+	dataSource: BidTableRow[] = [];
+	selectedRow: Bid | null = null;
 	displayedColumns: string[] = [];
 
 	loading = false;
@@ -30,14 +36,14 @@ export class BiddersPricingComponent implements OnInit {
 
 	constructor(private apiService: ApiService,
 				private toastr: ToastrService,
-				route: ActivatedRoute,
+				private route: ActivatedRoute,
 				private router: Router,
 				private cdr: ChangeDetectorRef,
 				private confirmationService: FuseConfirmationService,
 				private exportService: ExportService)
 	{
 		this.displayedColumns = ['company', 'duration', 'price', 'stage', 'isVerifiedOnBinaa', 'status', 'dummy_column_take_space'];
-		this.tenderId = +route.snapshot.paramMap.get('tenderId');
+		this.tenderId = +this.route.snapshot.paramMap.get('tenderId');
 	}
 
 	// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
@@ -118,7 +124,7 @@ export class BiddersPricingComponent implements OnInit {
 	}
 
 	exportToExcel(): void {
-		const simplifiedData = this.dataSource.map(element => ({
+		const simplifiedData = this.dataSource.map((element: Bid) => ({
 			'Company': element.user?.company?.name || '',
 			'Duration': element.durationInNumbers || '',
 			'Price': element.priceInNumbers || '',
@@ -141,7 +147,7 @@ export class BiddersPricingComponent implements OnInit {
 			.join(' ');
 	}
 
-	onStageChange(bid: any, stage: string | null): void {
+	onStageChange(bid: Bid, stage: string | null): void {
 		const payload = { stage };
 
 		this.apiService.patch(`bids/${bid.biddingId}/stage`, payload).subscribe({
