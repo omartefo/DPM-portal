@@ -159,6 +159,7 @@ export class BiddersPricingComponent implements OnInit {
 			'Duration': element.durationInNumbers || '',
 			'Price': element.priceInNumbers || '',
 			'Binaa Verified': element.user?.company?.isVerifiedOnBinaa ? 'Yes' : 'No',
+			'Stage': element.stage,
 			'Status': this.formatStatus(element.status)
 		}));
 
