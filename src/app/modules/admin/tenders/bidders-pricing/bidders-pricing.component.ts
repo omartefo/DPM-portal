@@ -54,6 +54,13 @@ export class BiddersPricingComponent implements OnInit {
 	};
 	apiWhere: WhereData | null = null;
 
+	toggleStageFilter = false;
+	stageFilterOptions: TableFilterConfig = {
+		options: ['Technical Meeting', 'Site Visit', 'Shortlisted'],
+		whereCol: 'stage',
+		selectedFilterValue: null
+	};
+
 	searchFC = new FormControl();
 
 	constructor(private apiService: ApiService,
@@ -198,14 +205,22 @@ export class BiddersPricingComponent implements OnInit {
 		this.loadData();
 	}
 
-	onFilter(ev: any): void {
+	onFilter(ev: any, type: 'range' | 'stage' = 'range'): void {
 		const search = ev.value ? ev.value[0] : '';
 
-		this.toggleRangeFilter = false;
-		this.rangeFilterOptions.selectedFilterValue = search;
+		if (type === 'range') {
+			this.toggleRangeFilter = false;
+			this.rangeFilterOptions.selectedFilterValue = search;
+		}
+		else {
+			this.toggleStageFilter = false;
+			this.stageFilterOptions.selectedFilterValue = search;
+		}
 
 		this.apiWhere = {
-			column: this.rangeFilterOptions.whereCol,
+			column: type === 'range'
+				? this.rangeFilterOptions.whereCol
+				: this.stageFilterOptions.whereCol,
 			op: 'eq',
 			search
 		};
