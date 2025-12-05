@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { PageEvent } from '@angular/material/paginator';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
@@ -12,6 +13,7 @@ import { TableFilterConfig, WhereData } from 'app/shared/components/generic-tabl
 import { ReplaceUnderscorePipe } from 'app/shared/pipes/replace-underscore.pipe';
 import { ExportService } from 'app/shared/services/export.service';
 import { ToastrService } from 'ngx-toastr';
+import { debounceTime, distinctUntilChanged } from 'rxjs';
 
 interface ErrorRow {
   title: string;
@@ -25,7 +27,9 @@ type BidTableRow = Bid | ErrorRow;
   templateUrl: './bidders-pricing.component.html',
   styleUrls: ['./bidders-pricing.component.scss'],
   standalone: true,
-  imports: [CommonModule, MaterialModule, ReplaceUnderscorePipe, TableFiltersComponent]
+  imports: [CommonModule, MaterialModule, ReplaceUnderscorePipe,
+		TableFiltersComponent, ReactiveFormsModule
+	]
 })
 export class BiddersPricingComponent implements OnInit {
 	tenderId: number;
@@ -50,6 +54,8 @@ export class BiddersPricingComponent implements OnInit {
 	};
 	apiWhere: WhereData | null = null;
 
+	searchFC = new FormControl();
+
 	constructor(private apiService: ApiService,
 				private toastr: ToastrService,
 				private route: ActivatedRoute,
@@ -68,15 +74,33 @@ export class BiddersPricingComponent implements OnInit {
 	ngOnInit(): void {
 		this.getTenderDetails();
 		this.loadData();
+
+		this.searchFC.valueChanges
+			.pipe(debounceTime(400), distinctUntilChanged())
+			.subscribe(val => this.searchData(val));
 	}
 
-	loadData(): void {
+	searchData(value: string): void {
+		if (value === '' || value == null) {
+			this.loadData();
+			return;
+		}
+
+		const queryStr = `company=${value}`;
+		this.loadData(queryStr);
+	}
+
+	loadData(search: string | null = null): void {
 		this.loading = true;
 		let queryString = `?page=${this.page}&limit=${this.limit}`;
 
 		if (this.apiWhere) {
 			const whereQueryStr = this.handleWhere();
 			queryString += `&${whereQueryStr}`;
+		}
+
+		if (search) {
+			queryString += `&${search}`;
 		}
 
 		const slug = `tenders/${this.tenderId}/bids${queryString}`;
