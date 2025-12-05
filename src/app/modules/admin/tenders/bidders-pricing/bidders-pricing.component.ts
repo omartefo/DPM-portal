@@ -230,19 +230,18 @@ export class BiddersPricingComponent implements OnInit {
 
 	private onHandleAPIResponse(resp: GenericApiResponse): void {
 		const { count, rows } = resp.data.bids;
-		this.dataSource = rows;
+
 		this.totalRecords = count;
 		this.loading = false;
 
-		if (this.dataSource.length === 0)
-		{
+		if (count === 0) {
 			this.dataError = true;
-			const r = {
-				title: 'No Record Found',
-				message: ''
-			};
-
-			this.dataSource = [r];
+			this.dataSource = [
+				{ title: 'No Record Found', message: '' } as ErrorRow
+			];
+		} else {
+			this.dataError = false;
+			this.dataSource = rows;
 		}
 
 		this.cdr.detectChanges();
