@@ -18,7 +18,7 @@
 						<mat-icon>download</mat-icon>
 					</button>
 
-					<button mat-stroked-button (click)="getAllBids()">
+					<button mat-stroked-button (click)="loadData()">
 						<mat-icon>refresh</mat-icon>
 					</button>
 				</div>
@@ -102,6 +102,13 @@
 							style="cursor: pointer;" (click)="onRowClick(row)">
 						</tr>
 					</table>
+
+					<mat-paginator class="paginator"
+						[pageSize]="limit" 
+						[pageSizeOptions]="pageSizeOptions" 
+						[length]="totalRecords"
+						(page)="onPageChange($event)">
+					</mat-paginator>
 				</div>
 			</div>
 		</div>

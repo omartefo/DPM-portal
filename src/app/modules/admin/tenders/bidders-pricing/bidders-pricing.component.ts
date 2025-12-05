@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { PageEvent } from '@angular/material/paginator';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { ApiService } from 'app/api.service';
@@ -34,6 +35,11 @@ export class BiddersPricingComponent implements OnInit {
 	loading = false;
 	dataError = false;
 
+	limit = 10;
+	page = 1;
+	pageSizeOptions = [10, 15, 20, 25];
+	totalRecords = 0;
+
 	constructor(private apiService: ApiService,
 				private toastr: ToastrService,
 				private route: ActivatedRoute,
@@ -51,33 +57,16 @@ export class BiddersPricingComponent implements OnInit {
 
 	ngOnInit(): void {
 		this.getTenderDetails();
-		this.getAllBids();
+		this.loadData();
 	}
 
-	getAllBids(): void {
+	loadData(): void {
 		this.loading = true;
-		this.apiService.get(`tenders/${this.tenderId}/bids`).subscribe({
-			next: (resp: GenericApiResponse) => {
-				this.dataSource = resp.data.bids;
-				this.loading = false;
+		const slug = `tenders/${this.tenderId}/bids?page=${this.page}&limit=${this.limit}`;
 
-				if (resp.data.bids.length === 0)
-				{
-					this.dataError = true;
-					const r = {
-						title: 'No Record Found',
-						message: ''
-					};
-
-					this.dataSource = [r];
-				}
-
-				this.cdr.detectChanges();
-			},
-			error: (error: any) => {
-				this.toastr.error(error);
-				this.loading = false;
-			}
+		this.apiService.get(slug).subscribe({
+			next: (resp: GenericApiResponse) => this.onHandleAPIResponse(resp),
+			error: (error: any) => this.onHandleError(error)
 		});
 	}
 
@@ -159,5 +148,36 @@ export class BiddersPricingComponent implements OnInit {
 				this.toastr.error(error);
 			}
 		});
+	}
+
+	onPageChange(ev: PageEvent): void {
+		this.limit = ev.pageSize;
+		this.page = ev.pageIndex + 1;
+		this.loadData();
+	}
+
+	private onHandleAPIResponse(resp: GenericApiResponse): void {
+		const { count, rows } = resp.data.bids;
+		this.dataSource = rows;
+		this.totalRecords = count;
+		this.loading = false;
+
+		if (this.dataSource.length === 0)
+		{
+			this.dataError = true;
+			const r = {
+				title: 'No Record Found',
+				message: ''
+			};
+
+			this.dataSource = [r];
+		}
+
+		this.cdr.detectChanges();
+	}
+
+	private onHandleError(error): void {
+		this.toastr.error(error);
+		this.loading = false;
 	}
 }
