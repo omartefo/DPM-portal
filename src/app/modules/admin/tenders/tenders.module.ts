@@ -9,14 +9,14 @@ import { CompanyDetailComponent } from './company-info/tender-form.component';
 import { TendersComponent } from './tenders/tenders.component';
 
 const routes: Route[] = [
-    {
-        path     : '',
-        component: TendersComponent
-    },
+  {
+    path     : '',
+    component: TendersComponent
+  },
 	{
-        path     : 'award/:tenderId',
-        component: BiddersPricingComponent
-    }
+    path     : 'award/:tenderId',
+    component: BiddersPricingComponent
+  }
 ];
 
 @NgModule({

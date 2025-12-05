@@ -1,8 +1,8 @@
 export type TableFormat = 'number' | 'image' | 'boolean' | 'date' | 'datetime' | 'url' | 'downloadable';
 
 export interface TableConfig {
-    title: string;
-    slug: string;
+	title: string;
+	slug: string;
 	primaryKey: string;
 
 	addBtnText?: string;
@@ -12,16 +12,16 @@ export interface TableConfig {
 	searchColumn?: string;
 	where?: WhereData;
 
-    rowActions: TableRowAction[];
-    columns: TableColumn[];
+	rowActions: TableRowAction[];
+	columns: TableColumn[];
 }
 
 export interface TableColumn {
-    name: string;
-    title: string;
-    sortable?: boolean;
-    visible?: boolean;
-    format?: TableFormat;
+	name: string;
+	title: string;
+	sortable?: boolean;
+	visible?: boolean;
+	format?: TableFormat;
 	isArray?: boolean;
 	columnName?: string;
 	applyStatusClass?: boolean;
@@ -40,8 +40,8 @@ export interface WhereData {
 }
 
 export interface TableRowAction {
-    name: string;
-    title: string;
+	name: string;
+	title: string;
 	action: string;
 	class?: string;
 

@@ -15,13 +15,13 @@ import { NestedValuePipe } from './nestedValue.pipe';
 		CommonModule,
 		FormsModule,
 		ReactiveFormsModule,
-		MaterialModule
+		MaterialModule,
+
+		TableFiltersComponent,
 	],
 	declarations: [
 		TableComponent,
-		TableFiltersComponent,
-
-        FormatDataPipe,
+    FormatDataPipe,
 		NestedValuePipe,
 		FormatDisplayValue
 	],

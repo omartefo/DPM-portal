@@ -7,6 +7,8 @@ import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { ApiService } from 'app/api.service';
 import { Bid, GenericApiResponse, Tender } from 'app/models';
 import { MaterialModule } from 'app/modules/material/material.module';
+import { TableFiltersComponent } from 'app/shared/components/filters/filters.component';
+import { TableFilterConfig, WhereData } from 'app/shared/components/generic-table/models';
 import { ReplaceUnderscorePipe } from 'app/shared/pipes/replace-underscore.pipe';
 import { ExportService } from 'app/shared/services/export.service';
 import { ToastrService } from 'ngx-toastr';
@@ -23,7 +25,7 @@ type BidTableRow = Bid | ErrorRow;
   templateUrl: './bidders-pricing.component.html',
   styleUrls: ['./bidders-pricing.component.scss'],
   standalone: true,
-  imports: [CommonModule, MaterialModule, ReplaceUnderscorePipe]
+  imports: [CommonModule, MaterialModule, ReplaceUnderscorePipe, TableFiltersComponent]
 })
 export class BiddersPricingComponent implements OnInit {
 	tenderId: number;
@@ -39,6 +41,14 @@ export class BiddersPricingComponent implements OnInit {
 	page = 1;
 	pageSizeOptions = [10, 15, 20, 25];
 	totalRecords = 0;
+
+	toggleRangeFilter = false;
+	rangeFilterOptions: TableFilterConfig = {
+		options: ['In Range', 'Out Of Range'],
+		whereCol: 'status',
+		selectedFilterValue: null
+	};
+	apiWhere: WhereData | null = null;
 
 	constructor(private apiService: ApiService,
 				private toastr: ToastrService,
@@ -62,7 +72,14 @@ export class BiddersPricingComponent implements OnInit {
 
 	loadData(): void {
 		this.loading = true;
-		const slug = `tenders/${this.tenderId}/bids?page=${this.page}&limit=${this.limit}`;
+		let queryString = `?page=${this.page}&limit=${this.limit}`;
+
+		if (this.apiWhere) {
+			const whereQueryStr = this.handleWhere();
+			queryString += `&${whereQueryStr}`;
+		}
+
+		const slug = `tenders/${this.tenderId}/bids${queryString}`;
 
 		this.apiService.get(slug).subscribe({
 			next: (resp: GenericApiResponse) => this.onHandleAPIResponse(resp),
@@ -156,6 +173,21 @@ export class BiddersPricingComponent implements OnInit {
 		this.loadData();
 	}
 
+	onFilter(ev: any): void {
+		const search = ev.value ? ev.value[0] : '';
+
+		this.toggleRangeFilter = false;
+		this.rangeFilterOptions.selectedFilterValue = search;
+
+		this.apiWhere = {
+			column: this.rangeFilterOptions.whereCol,
+			op: 'eq',
+			search
+		};
+
+		this.loadData();
+	}
+
 	private onHandleAPIResponse(resp: GenericApiResponse): void {
 		const { count, rows } = resp.data.bids;
 		this.dataSource = rows;
@@ -179,5 +211,23 @@ export class BiddersPricingComponent implements OnInit {
 	private onHandleError(error): void {
 		this.toastr.error(error);
 		this.loading = false;
+	}
+
+	private handleWhere(): string {
+		const { column, search, op } = this.apiWhere as WhereData;
+
+		let queryString = `${column}[${op}]=${search}`;
+
+		switch(this?.apiWhere?.op) {
+			case 'eq':
+				queryString = `${column}=${search}`;
+				break;
+
+			case 'ne':
+				queryString = `${column}[ne]=${search}`;
+
+		}
+
+		return queryString;
 	}
 }
