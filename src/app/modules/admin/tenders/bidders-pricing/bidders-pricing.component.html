@@ -34,17 +34,38 @@
 				<div>
 					<table mat-table [dataSource]="dataSource">
 						<ng-container matColumnDef="company">
-							<th mat-header-cell *matHeaderCellDef> Company </th>
-							<td mat-cell *matCellDef="let element"> {{element.user?.company?.name }} </td>
+							<th mat-header-cell *matHeaderCellDef (click)="onSort('company')" class="sortable">
+								<div class="flex items-center">
+									<span> Company </span>
+									<mat-icon *ngIf="isSortedBy('company')" class="sort-icon">
+										{{ sortDirection === 'asc' ? 'arrow_upward' : 'arrow_downward' }}
+									</mat-icon>
+								</div>
+							</th>
+							<td mat-cell *matCellDef="let element"> {{ element.user?.company?.name }} </td>
 						</ng-container>
 	
 						<ng-container matColumnDef="duration">
-							<th mat-header-cell *matHeaderCellDef> Duration (months) </th>
+							<th mat-header-cell *matHeaderCellDef (click)="onSort('duration')" class="sortable">
+								<div class="flex items-center">
+									<span> Duration (months) </span>
+									<mat-icon *ngIf="isSortedBy('duration')" class="sort-icon">
+										{{ sortDirection === 'asc' ? 'arrow_upward' : 'arrow_downward' }}
+									</mat-icon>
+								</div>
+							</th>
 							<td mat-cell *matCellDef="let element"> {{element.durationInNumbers }} </td>
 						</ng-container>
 	
 						<ng-container matColumnDef="price">
-							<th mat-header-cell *matHeaderCellDef> Price </th>
+							<th mat-header-cell *matHeaderCellDef (click)="onSort('price')" class="sortable">
+								<div class="flex items-center">
+									<span>Price</span>
+									<mat-icon *ngIf="isSortedBy('price')" class="sort-icon">
+										{{ sortDirection === 'asc' ? 'arrow_upward' : 'arrow_downward' }}
+									</mat-icon>
+								</div>
+							</th>
 							<td mat-cell *matCellDef="let element"> {{element.priceInNumbers }} </td>
 						</ng-container>
 

@@ -62,6 +62,8 @@ export class BiddersPricingComponent implements OnInit {
 	};
 
 	searchFC = new FormControl();
+	sortField: 'company' | 'duration' | 'price' | null = null;
+  sortDirection: 'asc' | 'desc' = 'asc';
 
 	constructor(private apiService: ApiService,
 				private toastr: ToastrService,
@@ -88,6 +90,8 @@ export class BiddersPricingComponent implements OnInit {
 	}
 
 	searchData(value: string): void {
+		this.page = 1;
+
 		if (value === '' || value == null) {
 			this.loadData();
 			return;
@@ -98,25 +102,29 @@ export class BiddersPricingComponent implements OnInit {
 	}
 
 	loadData(search: string | null = null): void {
-		this.loading = true;
-		let queryString = `?page=${this.page}&limit=${this.limit}`;
+  	this.loading = true;
+    let queryString = `?page=${this.page}&limit=${this.limit}`;
 
-		if (this.apiWhere) {
-			const whereQueryStr = this.handleWhere();
-			queryString += `&${whereQueryStr}`;
-		}
+    if (this.apiWhere) {
+      const whereQueryStr = this.handleWhere();
+      queryString += `&${whereQueryStr}`;
+    }
 
-		if (search) {
-			queryString += `&${search}`;
-		}
+    if (search) {
+      queryString += `&${search}`;
+    }
 
-		const slug = `tenders/${this.tenderId}/bids${queryString}`;
+    if (this.sortField) {
+      queryString += `&sort=${this.sortField}&order=${this.sortDirection}`;
+    }
 
-		this.apiService.get(slug).subscribe({
-			next: (resp: GenericApiResponse) => this.onHandleAPIResponse(resp),
-			error: (error: any) => this.onHandleError(error)
-		});
-	}
+    const slug = `tenders/${this.tenderId}/bids${queryString}`;
+
+    this.apiService.get(slug).subscribe({
+      next: (resp: GenericApiResponse) => this.onHandleAPIResponse(resp),
+      error: (error: any) => this.onHandleError(error)
+    });
+  }
 
 	getTenderDetails(): void {
 		this.apiService.get(`tenders/${this.tenderId}`).subscribe({
@@ -225,8 +233,31 @@ export class BiddersPricingComponent implements OnInit {
 			search
 		};
 
+		this.page = 1;
 		this.loadData();
 	}
+
+	onSort(column: 'company' | 'duration' | 'price'): void {
+		if (this.sortField !== column) {
+			// 1st click on this column -> ASC
+			this.sortField = column;
+			this.sortDirection = 'asc';
+		} else if (this.sortDirection === 'asc') {
+			// 2nd click on same column -> DESC
+			this.sortDirection = 'desc';
+		} else {
+			// 3rd click on same column -> remove sorting
+			this.sortField = null;
+			this.sortDirection = 'asc'; // reset default for next time
+		}
+
+		this.page = 1;
+		this.loadData();
+	}
+
+	isSortedBy(column: string): boolean {
+    return this.sortField === column;
+  }
 
 	private onHandleAPIResponse(resp: GenericApiResponse): void {
 		const { count, rows } = resp.data.bids;
