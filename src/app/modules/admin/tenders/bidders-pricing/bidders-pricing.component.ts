@@ -41,9 +41,9 @@ export class BiddersPricingComponent implements OnInit {
 	loading = false;
 	dataError = false;
 
-	limit = 10;
+	limit = 50;
 	page = 1;
-	pageSizeOptions = [10, 15, 20, 25];
+	pageSizeOptions = [5, 10, 20, 25, 50];
 	totalRecords = 0;
 
 	toggleRangeFilter = false;
